@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111116">
+<title>Mira AI</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111116;color:#fff;font-family:Arial,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+header{height:65px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid #292932;position:sticky;top:0;background:#111116;z-index:3}
+.logo{font-size:27px;font-weight:900;color:#d6a0ff}
+.logo span{color:white}
+.header-btn{background:#25232d;color:white;border:0;padding:10px 14px;border-radius:20px}
+main{max-width:650px;margin:auto;padding:18px 15px 100px}
+h1{font-size:27px;margin:10px 0}
+.muted{color:#999;font-size:13px}
+.search{width:100%;padding:15px;border-radius:25px;background:#24242e;border:1px solid #383844;color:white;margin:20px 0}
+.tabs{display:flex;gap:10px;overflow:auto;margin-bottom:22px}
+.tabs button{white-space:nowrap;background:#252530;color:#ccc;border:0;padding:10px 17px;border-radius:22px}
+.tabs button.selected{background:#d6a0ff;color:#17121d}
+.section-title{font-size:20px;margin:25px 0 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.card{background:#22222c;border-radius:17px;overflow:hidden;border:1px solid #33333e}
+.card-image{height:145px;display:grid;place-items:center;font-size:62px;background:linear-gradient(140deg,#493650,#24243c)}
+.card-info{padding:12px}
+.card-info b{font-size:15px}
+.card-info p{font-size:12px;color:#aaa;line-height:1.5;min-height:34px}
+.badge{font-size:10px;color:#d6a0ff}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#191920;border-top:1px solid #333;display:flex;justify-content:space-around;padding:12px 0 calc(12px + env(safe-area-inset-bottom));z-index:4}
+.bottom button{background:none;border:0;color:#aaa;font-size:11px}
+.bottom button.active{color:#d6a0ff}
+.bottom span{display:block;font-size:22px;margin-bottom:4px}
+.page{display:none}
+.page.active{display:block}
+.primary{background:#d6a0ff;color:#21152b;border:0;border-radius:12px;padding:13px 18px;font-weight:bold}
+.field{display:block;width:100%;background:#24242e;color:white;border:1px solid #41414b;padding:13px;border-radius:11px;margin:8px 0 17px}
+label{font-size:13px;color:#ccc}
+#chat{display:none;position:fixed;inset:0;background:#111116;z-index:10;flex-direction:column}
+.chat-head{height:65px;display:flex;align-items:center;gap:12px;padding:0 15px;border-bottom:1px solid #333}
+.chat-head button{background:none;color:white;border:0;font-size:27px}
+.chat-avatar{font-size:30px}
+.messages{flex:1;overflow-y:auto;padding:16px}
+.bubble{padding:12px 15px;border-radius:17px;margin:10px 0;max-width:85%;font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.bot{background:#292733}
+.user{background:#70458c;margin-left:auto}
+.chat-input{display:flex;gap:9px;padding:12px;border-top:1px solid #333}
+.chat-input input{flex:1;min-width:0;border:0;border-radius:24px;padding:13px;background:#292933;color:white}
+.chat-input button{border:0;background:#d6a0ff;border-radius:50%;width:45px}
+.profile{text-align:center;padding:25px 10px}
+.profile .avatar{font-size:85px}
+.profile p{color:#aaa;line-height:1.6}
+.empty{color:#999;padding:25px 0}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">mira<span>✦</span></div>
+ <button class="header-btn" onclick="showPage('create')">＋ Create</button>
+</header>
+
+<main>
+
+<section id="discover" class="page active">
+ <h1>Discover</h1>
+ <div class="muted">Find your next favourite conversation.</div>
+
+ <input class="search" id="search" placeholder="Search characters..." oninput="render()">
+
+ <div class="tabs">
+  <button class="selected" onclick="setCategory('All',this)">For you</button>
+  <button onclick="setCategory('Romance',this)">Romance</button>
+  <button onclick="setCategory('Fantasy',this)">Fantasy</button>
+  <button onclick="setCategory('Mystery',this)">Mystery</button>
+  <button onclick="setCategory('Friendship',this)">Friendship</button>
+ </div>
+
+ <div class="section-title">Characters for you</div>
+ <div class="grid" id="characterGrid"></div>
+</section>
+
+<section id="chats" class="page">
+ <h1>Your conversations</h1>
+ <div class="muted">Continue your stories.</div>
+ <div id="history" class="empty">No conversations yet.</div>
+</section>
+
+<section id="create" class="page">
+ <h1>Create a character</h1>
+ <p class="muted">Give your character a personality and a story.</p>
+
+ <label>Character name</label>
+ <input class="field" id="name" placeholder="Character name">
+
+ <label>Character description</label>
+ <textarea class="field" id="description" rows="3" placeholder="Who are they?"></textarea>
+
+ <label>Personality instructions</label>
+ <textarea class="field" id="personality" rows="4" placeholder="Describe their behaviour, personality and speaking style..."></textarea>
+
+ <label>First message</label>
+ <textarea class="field" id="greeting" rows="3" placeholder="What do they say when someone starts chatting?"></textarea>
+
+ <label>Category</label>
+ <select class="field" id="category">
+  <option>Romance</option>
+  <option>Fantasy</option>
+  <option>Mystery</option>
+  <option>Friendship</option>
+ </select>
+
+ <button class="primary" onclick="createCharacter()">Create character</button>
+</section>
+
+</main>
+
+<section id="profile" class="page">
+ <div class="profile">
+  <div class="avatar" id="profileEmoji">✨</div>
+  <h1 id="profileName"></h1>
+  <div class="muted" id="profileCategory"></div>
+  <p id="profileDescription"></p>
+  <button class="primary" onclick="startChat()">Start chatting</button>
+  <br><br>
+  <button class="header-btn" onclick="showPage('discover')">Back</button>
+ </div>
+</section>
+
+<section id="chat">
+ <div class="chat-head">
+  <button onclick="closeChat()">‹</button>
+  <div class="chat-avatar" id="chatEmoji">✨</div>
+  <div>
+   <b id="chatName"></b>
+   <div class="muted">Mira AI character</div>
+  </div>
+ </div>
+
+ <div class="messages" id="messages"></div>
+
+ <div class="chat-input">
+  <input id="message" placeholder="Message..." onkeydown="if(event.key==='Enter')send()">
+  <button onclick="send()">➤</button>
+ </div>
+</section>
+
+<nav class="bottom">
+ <button class="active" onclick="showPage('discover',this)"><span>⌕</span>Discover</button>
+ <button onclick="showPage('chats',this)"><span>♡</span>Chats</button>
+ <button onclick="showPage('create',this)"><span>＋</span>Create</button>
+</nav>
+
+<script>
+let characters=[
+ {name:"Adrian",emoji:"🖤",category:"Romance",description:"Quiet, observant and difficult to understand.",personality:"You are Adrian. You are quiet, observant and emotionally reserved. Speak naturally, with short realistic replies. Stay in character.",greeting:"*He looks up at you.* You're here."},
+ {name:"Luna",emoji:"🌙",category:"Fantasy",description:"A mysterious girl with secrets.",personality:"You are Luna, mysterious, clever and curious. Speak naturally and stay in character.",greeting:"I've been waiting for you."},
+ {name:"Noah",emoji:"☕",category:"Friendship",description:"Your sarcastic best friend.",personality:"You are Noah, funny, sarcastic, loyal and playful. Talk like a real friend.",greeting:"Look who finally showed up."},
+ {name:"The Stranger",emoji:"🕯️",category:"Mystery",description:"A mysterious encounter.",personality:"You are a mysterious stranger. Be intriguing and realistic.",greeting:"Have we met before?"}
+];
+
+let categoryFilter="All";
+let selected=null;
+let conversations={};
+
+function render(){
+ let query=document.getElementById("search").value.toLowerCase();
+ let list=characters.filter(c=>(categoryFilter==="All"||c.category===categoryFilter)&&(c.name+" "+c.description).toLowerCase().includes(query));
+
+ document.getElementById("characterGrid").innerHTML=list.map((c,i)=>`
+ <div class="card" onclick="openProfile('${escape(c.name)}')">
+ <div class="card-image">${c.emoji}</div>
+ <div class="card-info">
+ <b>${safe(c.name)}</b>
+ <p>${safe(c.description)}</p>
+ <div class="badge">${c.category}</div>
+ </div>
+ </div>`).join("")||'<div class="empty">No characters found.</div>';
+}
+
+function escape(s){return String(s).replace(/'/g,"\\'");}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+function setCategory(cat,btn){
+ categoryFilter=cat;
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("selected"));
+ btn.classList.add("selected");
+ render();
+}
+
+function showPage(id,btn){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.getElementById("chat").style.display="none";
+ document.querySelector(".bottom").style.display="flex";
+ document.querySelectorAll(".bottom button").forEach(b=>b.classList.remove("active"));
+ if(btn)btn.classList.add("active");
+ if(id==="chats")renderHistory();
+}
+
+function openProfile(name){
+ selected=characters.find(c=>c.name===name);
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById("profile").classList.add("active");
+ document.querySelector(".bottom").style.display="none";
+ document.getElementById("profileEmoji").textContent=selected.emoji;
+ document.getElementById("profileName").textContent=selected.name;
+ document.getElementById("profileCategory").textContent=selected.category;
+ document.getElementById("profileDescription").textContent=selected.description;
+}
+
+function startChat(){
+ if(!conversations[selected.name])conversations[selected.name]=[{role:"assistant",content:selected.greeting}];
+ document.getElementById("chatName").textContent=selected.name;
+ document.getElementById("chatEmoji").textContent=selected.emoji;
+ document.getElementById("profile").classList.remove("active");
+ document.getElementById("chat").style.display="flex";
+ renderMessages();
+}
+
+function renderMessages(){
+ document.getElementById("messages").innerHTML=conversations[selected.name].map(m=>`<div class="bubble ${m.role==="user"?"user":"bot"}">${safe(m.content)}</div>`).join("");
+ document.getElementById("messages").scrollTop=999999;
+}
+
+async function send(){
+ let input=document.getElementById("message");
+ let text=input.value.trim();
+ if(!text)return;
+
+ conversations[selected.name].push({role:"user",content:text});
+ input.value="";
+ renderMessages();
+
+ // Real AI will connect through this secure backend endpoint.
+ let waiting={role:"assistant",content:"Connecting to Mira's AI service..."};
+ conversations[selected.name].push(waiting);
+ renderMessages();
+
+ try{
+  let response=await fetch("/.netlify/functions/chat",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({
+    character:{
+     name:selected.name,
+     personality:selected.personality,
+     greeting:selected.greeting
+    },
+    messages:conversations[selected.name].filter(m=>m!==waiting)
+   })
+  });
+
+  if(!response.ok)throw new Error("AI service not connected yet.");
+  let data=await response.json();
+  waiting.content=data.reply;
+ }catch(error){
+  waiting.content="Mira's AI connection isn't set up yet. The chat interface is ready; we'll connect the AI backend next.";
+ }
+ renderMessages();
+}
+
+function closeChat(){
+ document.getElementById("chat").style.display="none";
+ document.querySelector(".bottom").style.display="flex";
+ showPage("discover",document.querySelector(".bottom button"));
+}
+
+function createCharacter(){
+ let name=document.getElementById("name").value.trim();
+ let description=document.getElementById("description").value.trim();
+ let personality=document.getElementById("personality").value.trim();
+ let greeting=document.getElementById("greeting").value.trim();
+
+ if(!name||!personality){
+  alert("Please enter a character name and personality.");
+  return;
+ }
+
+ characters.unshift({
+  name,description:description||personality,
+  personality,greeting:greeting||"Hello!",
+  category:document.getElementById("category").value,
+  emoji:"✨"
+ });
+
+ ["name","description","personality","greeting"].forEach(id=>document.getElementById(id).value="");
+ render();
+ showPage("discover",document.querySelector(".bottom button"));
+}
+
+function renderHistory(){
+ let names=Object.keys(conversations);
+ document.getElementById("history").innerHTML=names.length?
+ names.map(n=>`<div class="card" style="padding:17px;margin:10px 0" onclick="openProfile('${escape(n)}')">${safe(n)}　→</div>`).join("")
+ :"No conversations yet.";
+}
+
+render();
+</script>
+</body>
+</html>
