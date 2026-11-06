@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mira AI</title>
+
+<style>
+:root {
+    --bg: #101012;
+    --panel: #18181c;
+    --card: #202025;
+    --border: #2b2b32;
+    --text: #f5f5f5;
+    --muted: #92929b;
+    --accent: #9275d8;
+    --accent-soft: #302744;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    min-height: 100vh;
+}
+
+button, input, textarea, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* APP LAYOUT */
+
+.app {
+    min-height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    width: 245px;
+    background: #151518;
+    border-right: 1px solid var(--border);
+    padding: 25px 17px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 20;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: 750;
+    letter-spacing: -1px;
+    padding: 5px 12px 35px;
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+.nav-label {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    padding: 0 12px;
+    margin: 17px 0 9px;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    width: 100%;
+    background: transparent;
+    color: #aaaab2;
+    border: 0;
+    padding: 13px 12px;
+    border-radius: 9px;
+    text-align: left;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+    background: var(--card);
+    color: white;
+}
+
+.nav-btn.active {
+    box-shadow: inset 2px 0 var(--accent);
+}
+
+.nav-icon {
+    font-size: 17px;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+}
+
+.account-mini {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 15px 8px;
+    border-top: 1px solid var(--border);
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--card);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.account-mini small {
+    color: var(--muted);
+    display: block;
+    margin-top: 3px;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 245px;
+    width: calc(100% - 245px);
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 68px;
+    padding: 0 35px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: rgba(16,16,18,.94);
+    backdrop-filter: blur(12px);
+    z-index: 10;
+}
+
+.topbar-title {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.top-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: white;
+    border-radius: 9px;
+    padding: 10px 15px;
+    font-size: 13px;
+}
+
+.btn:hover {
+    background: #303038;
+}
+
+.btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #8063c7;
+}
+
+.content {
+    max-width: 1120px;
+    margin: auto;
+    padding: 34px 35px 100px;
+}
+
+.page-heading {
+    margin-bottom: 26px;
+}
+
+.page-heading h1 {
+    font-size: 27px;
+    letter-spacing: -.7px;
+    margin-bottom: 8px;
+}
+
+.page-heading p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* SEARCH */
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 0 15px;
+    margin-bottom: 24px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 15px 0;
+    color: white;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+
+.search-box input::placeholder {
+    color: #777780;
+}
+
+/* CATEGORIES */
+
+.categories {
+    display: flex;
+    gap: 9px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 28px;
+    scrollbar-width: none;
+}
+
+.categories button {
+    white-space: nowrap;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: #aaaab2;
+    border-radius: 20px;
+    padding: 9px 16px;
+    font-size: 12px;
+}
+
+.categories button.active,
+.categories button:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: white;
+}
+
+/* CHARACTER GRID */
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0 16px;
+}
+
+.section-title h2 {
+    font-size: 17px;
+}
+
+.section-title button {
+    background: none;
+    color: var(--muted);
+    border: none;
+    font-size: 12px;
+}
+
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.character-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .2s;
+    min-width: 0;
+}
+
+.character-card:hover {
+    border-color: #666077;
+    transform: translateY(-2px);
+}
+
+.character-image {
+    height: 180px;
+    background: #25252b;
+    overflow: hidden;
+}
+
+.character-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.character-info {
+    padding: 14px;
+}
+
+.character-info h3 {
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+.character-info p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+    height: 36px;
+    overflow: hidden;
+}
+
+.character-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 13px;
+}
+
+/* PROFILE */
+
+.profile-cover {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.profile-avatar {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    background: var(--card);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-details p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+/* CHAT */
+
+.chat-layout {
+    height: calc(100vh - 68px);
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 25px;
+    border-bottom: 1px solid var(--border);
+}
+
+.chat-header img {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.chat-header p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 25px max(20px, calc((100% - 720px)/2));
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.message {
+    max-width: 78%;
+    padding: 13px 16px;
+    border-radius: 13px;
+    font-size: 14px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.message.assistant {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    align-self: flex-start;
+}
+
+.message.user {
+    background: var(--accent-soft);
+    align-self: flex-end;
+}
+
+.typing {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.chat-input-area {
+    border-top: 1px solid var(--border);
+    padding: 17px 20px;
+}
+
+.chat-input {
+    max-width: 760px;
+    margin: auto;
+    display: flex;
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 7px;
+}
+
+.chat-input textarea {
+    flex: 1;
+    min-width: 0;
+    resize: none;
+    max-height: 120px;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+}
+
+.chat-input button {
+    align-self: flex-end;
+}
+
+/* CHARACTER PROFILE */
+
+.character-profile {
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.character-profile-image {
+    height: 300px;
+    border-radius: 14px;
+    background: var(--panel);
+    overflow: hidden;
+    margin-bottom: 22px;
+}
+
+.character-profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.character-profile h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.character-profile .creator {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 22px;
+}
+
+.detail-section {
+    margin: 22px 0;
+}
+
+.detail-section h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.detail-section p {
+    color: #b4b4bd;
+    line-height: 1.7;
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+
+.full-button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+}
+
+/* FORMS AND MODALS */
+
+.form {
+    max-width: 650px;
+}
+
+.form-group {
+    margin-bottom: 19px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 13px;
+    color: white;
+    outline: none;
+    font-size: 14px;
+}
+
+.form-group textarea {
+    min-height: 95px;
+    resize: vertical;
+}
+
+.form-group small {
+    color: var(--muted);
+    display: block;
+    margin-top: 7px;
+    font-size: 11px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--accent);
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal-box {
+    background: #19191e;
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 420px;
+    border-radius: 15px;
+    padding: 27px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-box h2 {
+    font-size: 21px;
+    margin-bottom: 8px;
+}
+
+.modal-box > p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 23px;
+}
+
+.modal-close {
+    float: right;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 22px;
+}
+
+.form-link {
+    background: none;
+    border: none;
+    color: #b69bea;
+    font-size: 13px;
+    margin-top: 17px;
+}
+
+/* EMPTY STATES */
+
+.empty {
+    text-align: center;
+    padding: 65px 15px;
+    color: var(--muted);
+}
+
+.empty h3 {
+    color: white;
+    margin-bottom: 9px;
+}
+
+.empty p {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* MOBILE NAV */
+
+.mobile-nav {
+    display: none;
+}
+
+@media(max-width: 850px) {
+    .sidebar {
+        width: 76px;
+        padding: 20px 10px;
+    }
+
+    .logo {
+        font-size: 20px;
+        padding: 7px 5px 35px;
+    }
+
+    .logo-text,
+    .nav-label,
+    .nav-text,
+    .account-info {
+        display: none;
+    }
+
+    .nav-btn {
+        justify-content: center;
+        padding: 14px 5px;
+    }
+
+    .nav-icon {
+        font-size: 20px;
+    }
+
+    .account-mini {
+        justify-content: center;
+    }
+
+    .main {
+        margin-left: 76px;
+        width: calc(100% - 76px);
+    }
+
+    .character-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+}
+
+@media(max-width: 600px) {
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .topbar {
+        height: 58px;
+        padding: 0 17px;
+    }
+
+    .content {
+        padding: 25px 16px 100px;
+    }
+
+    .page-heading h1 {
+        font-size: 24px;
+    }
+
+    .character-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 10px;
+    }
+
+    .character-image {
+        height: 145px;
+    }
+
+    .character-info {
+        padding: 11px;
+    }
+
+    .character-info h3 {
+        font-size: 13px;
+    }
+
+    .character-info p {
+        font-size: 11px;
+    }
+
+    .mobile-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #17171b;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 4px calc(10px + env(safe-area-inset-bottom));
+        z-index: 30;
+    }
+
+    .mobile-nav button {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        min-width: 58px;
+    }
+
+    .mobile-nav button span {
+        font-size: 19px;
+    }
+
+    .mobile-nav button.active {
+        color: white;
+    }
+
+    .chat-layout {
+        height: calc(100dvh - 58px);
+    }
+
+    .messages {
+        padding: 18px 13px;
+    }
+
+    .message {
+        max-width: 88%;
+        font-size: 13px;
+    }
+
+    .chat-input-area {
+        padding: 10px;
+    }
+
+    .profile-cover {
+        padding: 18px;
+    }
+
+    .character-profile-image {
+        height: 230px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<aside class="sidebar">
+    <div class="logo">mira<span>.</span><span class="logo-text"> ai</span></div>
+
+    <div class="nav-label">Menu</div>
+
+    <button class="nav-btn active" data-page="discover">
+        <span class="nav-icon">⌂</span>
+        <span class="nav-text">Discover</span>
+    </button>
+
+    <button class="nav-btn" data-page="chats">
+        <span class="nav-icon">▤</span>
+        <span class="nav-text">Chats</span>
+    </button>
+
+    <button class="nav-btn" data-page="create">
+        <span class="nav-icon">＋</span>
+        <span class="nav-text">Create character</span>
+    </button>
+
+    <div class="nav-label">Account</div>
+
+    <button class="nav-btn" data-page="profile">
+        <span class="nav-icon">◉</span>
+        <span class="nav-text">Profile</span>
+    </button>
+
+    <div class="sidebar-bottom">
+        <div class="account-mini">
+            <div class="avatar">U</div>
+            <div class="account-info">
+                <strong id="sideUsername">Guest</strong>
+                <small>My account</small>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <div class="topbar-title" id="topTitle">Discover</div>
+
+    <div class="top-actions">
+        <button class="btn" id="authButton" onclick="openAuth()">Log in</button>
+    </div>
+</header>
+
+<!-- DISCOVER -->
+
+<section class="content" id="discoverPage">
+
+<div class="page-heading">
+    <h1>Discover characters</h1>
+    <p>Find someone interesting to talk to.</p>
+</div>
+
+<div class="search-box">
+    <span>⌕</span>
+    <input id="searchInput" placeholder="Search characters...">
+</div>
+
+<div class="categories" id="categories">
+    <button class="active" data-category="All">For you</button>
+    <button data-category="Romance">Romance</button>
+    <button data-category="Fantasy">Fantasy</button>
+    <button data-category="Anime">Anime</button>
+    <button data-category="Drama">Drama</button>
+    <button data-category="Adventure">Adventure</button>
+</div>
+
+<div class="section-title">
+    <h2>Popular characters</h2>
+</div>
+
+<div class="character-grid" id="characterGrid"></div>
+
+</section>
+
+<!-- CHATS -->
+
+<section class="content hidden" id="chatsPage">
+
+<div class="page-heading">
+    <h1>Your conversations</h1>
+    <p>Pick up where you left off.</p>
+</div>
+
+<div id="chatList"></div>
+
+</section>
+
+<!-- CREATE -->
+
+<section class="content hidden" id="createPage">
+
+<div class="page-heading">
+    <h1>Create a character</h1>
+    <p>Bring your own character to life.</p>
+</div>
+
+<form class="form" id="createForm">
+
+<div class="form-group">
+<label>Character name *</label>
+<input name="name" required maxlength="50" placeholder="Give your character a name">
+</div>
+
+<div class="form-group">
+<label>Profile image URL</label>
+<input name="image" type="url" placeholder="https://example.com/image.jpg">
+<small>For this prototype, use a publicly accessible image URL.</small>
+</div>
+
+<div class="form-group">
+<label>Short description *</label>
+<textarea name="description" required maxlength="250" placeholder="What makes this character interesting?"></textarea>
+</div>
+
+<div class="form-group">
+<label>Personality *</label>
+<textarea name="personality" required placeholder="Describe their personality, behaviour and speaking style."></textarea>
+</div>
+
+<div class="form-group">
+<label>Background</label>
+<textarea name="background" placeholder="Tell us about their history and life."></textarea>
+</div>
+
+<div class="form-group">
+<label>Scenario</label>
+<textarea name="scenario" placeholder="Describe the situation in which the roleplay begins."></textarea>
+</div>
+
+<div class="form-group">
+<label>Greeting message</label>
+<textarea name="greeting" placeholder="What does your character say when someone starts a chat?"></textarea>
+</div>
+
+<div class="form-group">
+<label>Example dialogue</label>
+<textarea name="exampleDialogue" placeholder="Show how your character speaks."></textarea>
+</div>
+
+<div class="form-group">
+<label>Category</label>
+<select name="category">
+<option>Romance</option>
+<option>Fantasy</option>
+<option>Anime</option>
+<option>Drama</option>
+<option>Adventure</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Visibility</label>
+<select name="visibility">
+<option value="public">Public — everyone can discover this character</option>
+<option value="private">Private — only you can see this character</option>
+</select>
+</div>
+
+<button class="btn btn-primary full-button" type="submit">
+Create character
+</button>
+
+</form>
+</section>
+
+<!-- PROFILE -->
+
+<section class="content hidden" id="profilePage">
+
+<div class="page-heading">
+    <h1>Your profile</h1>
+    <p>Your account and characters.</p>
+</div>
+
+<div class="profile-cover">
+    <div class="profile-avatar">U</div>
+    <div class="profile-details">
+        <h2 id="profileUsername">Guest</h2>
+        <p id="profileEmail">Not signed in</p>
+    </div>
+</div>
+
+<div class="section-title">
+    <h2>Your characters</h2>
+    <button onclick="showPage('create')">＋ Create new</button>
+</div>
+
+<div class="character-grid" id="myCharacters"></div>
+
+<button class="btn full-button" onclick="logout()" id="logoutButton">
+    Log out
+</button>
+
+</section>
+
+<!-- CHARACTER DETAILS -->
+
+<section class="content hidden" id="characterPage">
+<div class="character-profile" id="characterDetails"></div>
+</section>
+
+<!-- CHAT -->
+
+<section class="hidden" id="chatPage">
+
+<div class="chat-layout">
+
+<div class="chat-header">
+    <button class="btn" onclick="showPage('chats')">←</button>
+    <img id="chatCharacterImage" src="" alt="">
+    <div>
+        <strong id="chatCharacterName"></strong>
+        <p>Character conversation</p>
+    </div>
+</div>
+
+<div class="messages" id="messages"></div>
+
+<div class="chat-input-area">
+    <form class="chat-input" id="messageForm">
+        <textarea id="messageInput" rows="1" placeholder="Write a message..." required></textarea>
+        <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+</div>
+
+</div>
+</section>
+
+</main>
+</div>
+
+<!-- MOBILE NAV -->
+
+<nav class="mobile-nav">
+    <button class="active" data-page="discover">
+        <span>⌂</span>Home
+    </button>
+    <button data-page="chats">
+        <span>▤</span>Chats
+    </button>
+    <button data-page="create">
+        <span>＋</span>Create
+    </button>
+    <button data-page="profile">
+        <span>◉</span>Profile
+    </button>
+</nav>
+
+<!-- AUTH MODAL -->
+
+<div class="modal hidden" id="authModal">
+<div class="modal-box">
+
+<button class="modal-close" onclick="closeAuth()">×</button>
+
+<h2 id="authTitle">Welcome back</h2>
+<p id="authDescription">Log in to continue your conversations.</p>
+
+<form id="authForm">
+
+<div class="form-group hidden" id="usernameGroup">
+<label>Username</label>
+<input id="authUsername" maxlength="25">
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input id="authEmail" type="email" required>
+</div>
+
+<div class="form-group">
+<label>Password</label>
+<input id="authPassword" type="password" minlength="8" required>
+</div>
+
+<div class="form-group hidden" id="birthGroup">
+<label>Date of birth</label>
+<input id="authBirth" type="date">
+</div>
+
+<button class="btn btn-primary full-button" type="submit" id="authSubmit">
+Log in
+</button>
+
+</form>
+
+<button class="form-link" id="authSwitch" onclick="switchAuth()">
+Don't have an account? Sign up
+</button>
+
+<p id="authError" style="color:#ef7777;margin-top:12px"></p>
+
+</div>
+</div>
+
+<script>
+
+/* DATA */
+
+const defaultCharacters = [
+{
+id:"mira-default",
+name:"Mira",
+description:"A thoughtful companion with a warm personality and a curious mind.",
+personality:"Warm, thoughtful, observant and curious. Speaks naturally and remembers the conversation.",
+background:"Mira enjoys meaningful conversations and getting to know people.",
+scenario:"You have just started talking to Mira.",
+greeting:"Hey! It's nice to meet you. How has your day been?",
+exampleDialogue:"",
+category:"Drama",
+visibility:"public",
+creator:"Mira AI",
+image:""
+},
+{
+id:"roleplay-partner",
+name:"Roleplay Partner",
+description:"An open-ended character for immersive storytelling and roleplay.",
+personality:"Adapts to the established fictional personality and scenario. Never controls the user's character.",
+background:"A flexible roleplay character.",
+scenario:"A new story is about to begin.",
+greeting:"So, where should our story begin?",
+exampleDialogue:"",
+category:"Fantasy",
+visibility:"public",
+creator:"Mira AI",
+image:""
+}
+];
+
+let characters = load("mira_characters",defaultCharacters);
+let conversations = load("mira_conversations",{});
+let currentCharacter = null;
+let currentConversation = null;
+let currentUser = load("mira_user",null);
+let selectedCategory = "All";
+let authMode = "login";
+
+function load(key,fallback) {
+    try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+    } catch {
+        return fallback;
+    }
+}
+
+function save() {
+    localStorage.setItem("mira_characters",JSON.stringify(characters));
+    localStorage.setItem("mira_conversations",JSON.stringify(conversations));
+    localStorage.setItem("mira_user",JSON.stringify(currentUser));
+}
+
+function escapeHTML(value) {
+    return String(value || "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+    }[c]));
+}
+
+function safeImage(url) {
+    try {
+        const parsed = new URL(url);
+        if (parsed.protocol === "https:" || parsed.protocol === "http:") {
+            return parsed.href;
+        }
+    } catch {}
+    return "";
+}
+
+function imageMarkup(url) {
+    const safe = safeImage(url);
+    return safe
+        ? `<img src="${escapeHTML(safe)}" alt="" onerror="this.style.display='none'">`
+        : `<div style="height:100%;display:grid;place-items:center;color:#777;font-size:38px">✦</div>`;
+}
+
+/* NAVIGATION */
+
+const pageIds = [
+    "discover","chats","create","profile","character","chat"
+];
+
+function showPage(page) {
+
+    pageIds.forEach(id => {
+        document.getElementById(id+"Page")?.classList.add("hidden");
+    });
+
+    document.getElementById(page+"Page")?.classList.remove("hidden");
+
+    document.querySelectorAll("[data-page]").forEach(button => {
+        button.classList.toggle("active",button.dataset.page===page);
+    });
+
+    const titles = {
+        discover:"Discover",
+        chats:"Your chats",
+        create:"Create character",
+        profile:"Profile",
+        character:"Character",
+        chat:"Conversation"
+    };
+
+    document.getElementById("topTitle").textContent=titles[page] || "Mira AI";
+
+    if(page==="discover") renderCharacters();
+    if(page==="chats") renderChats();
+    if(page==="profile") renderProfile();
+}
+
+document.querySelectorAll("[data-page]").forEach(button => {
+    button.addEventListener("click",() => showPage(button.dataset.page));
+});
+
+/* DISCOVER */
+
+function renderCharacters() {
+
+    const query=document.getElementById("searchInput").value.toLowerCase();
+
+    const filtered=characters.filter(c => {
+        if(c.visibility==="private" && c.creator!==(currentUser?.username || "Guest")) return false;
+
+        const categoryMatch=selectedCategory==="All" || c.category===selectedCategory;
+
+        const searchMatch=(c.name+" "+c.description+" "+c.category)
+            .toLowerCase().includes(query);
+
+        return categoryMatch && searchMatch;
+    });
+
+    const grid=document.getElementById("characterGrid");
+
+    if(!filtered.length) {
+        grid.innerHTML=`<div class="empty" style="grid-column:1/-1">
+        <h3>No characters found</h3>
+        <p>Try another search or category.</p>
+        </div>`;
+        return;
+    }
+
+    grid.innerHTML=filtered.map(c=>`
+        <article class="character-card" data-character="${escapeHTML(c.id)}">
+            <div class="character-image">${imageMarkup(c.image)}</div>
+            <div class="character-info">
+                <h3>${escapeHTML(c.name)}</h3>
+                <p>${escapeHTML(c.description)}</p>
+                <div class="character-meta">
+                    <span>${escapeHTML(c.category)}</span>
+                    <span>✦ ${escapeHTML(c.creator)}</span>
+                </div>
+            </div>
+        </article>
+    `).join("");
+
+    grid.querySelectorAll("[data-character]").forEach(card => {
+        card.addEventListener("click",()=>openCharacter(card.dataset.character));
+    });
+}
+
+document.getElementById("searchInput").addEventListener("input",renderCharacters);
+
+document.querySelectorAll("[data-category]").forEach(button=>{
+    button.addEventListener("click",()=>{
+        selectedCategory=button.dataset.category;
+
+        document.querySelectorAll("[data-category]").forEach(b=>{
+            b.classList.toggle("active",b===button);
+        });
+
+        renderCharacters();
+    });
+});
+
+/* CHARACTER DETAILS */
+
+function openCharacter(id) {
+
+    currentCharacter=characters.find(c=>c.id===id);
+
+    if(!currentCharacter) return;
+
+    const c=currentCharacter;
+
+    document.getElementById("characterDetails").innerHTML=`
+        <div class="character-profile-image">${imageMarkup(c.image)}</div>
+
+        <h1>${escapeHTML(c.name)}</h1>
+
+        <p class="creator">Created by ${escapeHTML(c.creator)}</p>
+
+        <div class="detail-section">
+            <p>${escapeHTML(c.description)}</p>
+        </div>
+
+        <div class="detail-section">
+            <h3>Personality</h3>
+            <p>${escapeHTML(c.personality)}</p>
+        </div>
+
+        <div class="detail-section">
+            <h3>Background</h3>
+            <p>${escapeHTML(c.background)}</p>
+        </div>
+
+        <div class="detail-section">
+            <h3>Scenario</h3>
+            <p>${escapeHTML(c.scenario)}</p>
+        </div>
+
+        <button class="btn btn-primary full-button" id="startChat">
+            Start chatting
+        </button>
+    `;
+
+    showPage("character");
+
+    document.getElementById("startChat").onclick=()=>startChat(c.id);
+}
+
+/* CREATE CHARACTER */
+
+document.getElementById("createForm").addEventListener("submit",event=>{
+
+    event.preventDefault();
+
+    const form=new FormData(event.target);
+
+    const character={
+        id:"character-"+Date.now(),
+        name:form.get("name").trim(),
+        image:safeImage(form.get("image")),
+        description:form.get("description").trim(),
+        personality:form.get("personality").trim(),
+        background:form.get("background").trim(),
+        scenario:form.get("scenario").trim(),
+        greeting:form.get("greeting").trim(),
+        exampleDialogue:form.get("exampleDialogue").trim(),
+        category:form.get("category"),
+        visibility:form.get("visibility"),
+        creator:currentUser?.username || "Guest"
+    };
+
+    characters.unshift(character);
+    save();
+
+    event.target.reset();
+
+    alert("Character created!");
+
+    openCharacter(character.id);
+});
+
+/* CHAT */
+
+function startChat(id) {
+
+    currentCharacter=characters.find(c=>c.id===id);
+
+    if(!currentCharacter) return;
+
+    const key=id;
+
+    if(!conversations[key]) {
+        conversations[key]=[];
+    }
+
+    currentConversation=key;
+
+    if(conversations[key].length===0 && currentCharacter.greeting) {
+        conversations[key].push({
+            role:"assistant",
+            content:currentCharacter.greeting
+        });
+        save();
+    }
+
+    document.getElementById("chatCharacterName").textContent=currentCharacter.name;
+
+    document.getElementById("chatCharacterImage").src=safeImage(currentCharacter.image) || "";
+
+    showPage("chat");
+    renderMessages();
+}
+
+function renderMessages() {
+
+    const box=document.getElementById("messages");
+
+    const messages=conversations[currentConversation] || [];
+
+    box.innerHTML=messages.map(m=>`
+        <div class="message ${m.role==="user"?"user":"assistant"}">${escapeHTML(m.content)}</div>
+    `).join("");
+
+    box.scrollTop=box.scrollHeight;
+}
+
+document.getElementById("messageForm").addEventListener("submit",async event=>{
+
+    event.preventDefault();
+
+    const input=document.getElementById("messageInput");
+    const text=input.value.trim();
+
+    if(!text || !currentCharacter || !currentConversation) return;
+
+    const sendButton=event.submitter;
+
+    if(sendButton) sendButton.disabled=true;
+
+    const conversationId=currentConversation;
+    const characterId=currentCharacter.id;
+
+    conversations[conversationId].push({
+        role:"user",
+        content:text
+    });
+
+    input.value="";
+    save();
+    renderMessages();
+
+    const box=document.getElementById("messages");
+
+    const typing=document.createElement("div");
+    typing.className="typing";
+    typing.textContent=currentCharacter.name+" is typing...";
+    box.appendChild(typing);
+
+    try {
+
+        const response=await fetch("/.netlify/functions/chat",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({
+                character:currentCharacter,
+                messages:conversations[conversationId].slice(-30)
+            })
+        });
+
+        const data=await response.json();
+
+        if(!response.ok) {
+            throw new Error(data.error || "The AI could not respond.");
+        }
+
+        if(!data.reply) {
+            throw new Error("The AI returned an empty response.");
+        }
+
+        conversations[conversationId].push({
+            role:"assistant",
+            content:data.reply
+        });
+
+        save();
+
+    } catch(error) {
+
+        conversations[conversationId].push({
+            role:"assistant",
+            content:"I couldn't get a response right now. Please try again."
+        });
+
+        console.error(error);
+        save();
+
+    } finally {
+
+        if(currentConversation===conversationId &&
+           currentCharacter?.id===characterId) {
+            renderMessages();
+        }
+
+        if(sendButton) sendButton.disabled=false;
+    }
+});
+
+/* CHAT HISTORY */
+
+function renderChats() {
+
+    const list=document.getElementById("chatList");
+
+    const ids=Object.keys(conversations).filter(id=>
+        conversations[id].length>0
+    );
+
+    if(!ids.length) {
+        list.innerHTML=`
+        <div class="empty">
+            <h3>No conversations yet</h3>
+            <p>Discover a character and start your first conversation.</p>
+            <button class="btn btn-primary" onclick="showPage('discover')">Discover characters</button>
+        </div>`;
+        return;
+    }
+
+    list.innerHTML=ids.map(id=>{
+
+        const character=characters.find(c=>c.id===id);
+        if(!character) return "";
+
+        const last=conversations[id].slice(-1)[0];
+
+        return `
+        <div class="character-card" style="display:flex;align-items:center;padding:13px;margin-bottom:10px"
+        data-chat="${escapeHTML(id)}">
+
+            <div style="width:55px;height:55px;border-radius:9px;overflow:hidden;background:#25252b;flex-shrink:0">
+                ${imageMarkup(character.image)}
+            </div>
+
+            <div style="padding:0 13px;min-width:0">
+                <h3 style="font-size:14px">${escapeHTML(character.name)}</h3>
+                <p style="color:var(--muted);font-size:12px;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                ${escapeHTML(last.content)}
+                </p>
+            </div>
+
+        </div>`;
+    }).join("");
+
+    list.querySelectorAll("[data-chat]").forEach(item=>{
+        item.addEventListener("click",()=>startChat(item.dataset.chat));
+    });
+}
+
+/* PROFILE */
+
+function renderProfile() {
+
+    document.getElementById("profileUsername").textContent=
+        currentUser?.username || "Guest";
+
+    document.getElementById("profileEmail").textContent=
+        currentUser?.email || "Not signed in";
+
+    document.getElementById("sideUsername").textContent=
+        currentUser?.username || "Guest";
+
+    const mine=characters.filter(c=>
+        c.creator===(currentUser?.username || "Guest")
+    );
+
+    document.getElementById("myCharacters").innerHTML=mine.map(c=>`
+        <article class="character-card" data-character="${escapeHTML(c.id)}">
+            <div class="character-image">${imageMarkup(c.image)}</div>
+            <div class="character-info">
+                <h3>${escapeHTML(c.name)}</h3>
+                <p>${escapeHTML(c.description)}</p>
+                <div class="character-meta">
+                    <span>${escapeHTML(c.category)}</span>
+                    <span>${c.visibility==="public"?"Public":"Private"}</span>
+                </div>
+            </div>
+        </article>
+    `).join("") || `<div class="empty" style="grid-column:1/-1"><h3>No characters yet</h3><p>Create your first character.</p></div>`;
+
+    document.querySelectorAll("#myCharacters [data-character]").forEach(card=>{
+        card.addEventListener("click",()=>openCharacter(card.dataset.character));
+    });
+
+    document.getElementById("authButton").textContent=
+        currentUser ? "Account" : "Log in";
+}
+
+/* AUTH PROTOTYPE */
+
+function openAuth() {
+
+    if(currentUser) {
+        showPage("profile");
+        return;
+    }
+
+    authMode="login";
+    updateAuth();
+    document.getElementById("authModal").classList.remove("hidden");
+}
+
+function closeAuth() {
+    document.getElementById("authModal").classList.add("hidden");
+}
+
+function switchAuth() {
+    authMode=authMode==="login"?"signup":"login";
+    updateAuth();
+}
+
+function updateAuth() {
+
+    const signup=authMode==="signup";
+
+    document.getElementById("authTitle").textContent=
+        signup?"Create your account":"Welcome back";
+
+    document.getElementById("authDescription").textContent=
+        signup?"Join Mira AI and discover characters.":"Log in to continue your conversations.";
+
+    document.getElementById("usernameGroup").classList.toggle("hidden",!signup);
+    document.getElementById("birthGroup").classList.toggle("hidden",!signup);
+
+    document.getElementById("authUsername").required=signup;
+    document.getElementById("authBirth").required=signup;
+
+    document.getElementById("authSubmit").textContent=
+        signup?"Create account":"Log in";
+
+    document.getElementById("authSwitch").textContent=
+        signup?"Already have an account? Log in":"Don't have an account? Sign up";
+
+    document.getElementById("authError").textContent="";
+}
+
+document.getElementById("authForm").addEventListener("submit",event=>{
+
+    event.preventDefault();
+
+    document.getElementById("authError").textContent=
+        "Authentication is not connected yet. Supabase integration is the next step.";
+
+});
+
+/* LOGOUT */
+
+function logout() {
+
+    if(!currentUser) {
+        openAuth();
+        return;
+    }
+
+    currentUser=null;
+    save();
+
+    renderProfile();
+
+    alert("Prototype account logged out.");
+    showPage("discover");
+}
+
+/* INITIALIZE */
+
+renderCharacters();
+renderProfile();
+showPage("discover");
+
+</script>
+
+</body>
+</html>
