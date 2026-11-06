@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mira AI</title>
+<style>
+:root {
+  --bg:#101012;
+  --panel:#18181b;
+  --card:#202024;
+  --border:#2c2c31;
+  --text:#f5f5f5;
+  --muted:#929299;
+  --accent:#a58aff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+header{height:65px;border-bottom:1px solid var(--border);
+display:flex;align-items:center;justify-content:space-between;
+padding:0 25px;position:sticky;top:0;background:#101012;z-index:5}
+.logo{font-size:24px;font-weight:750;letter-spacing:-1px}
+.logo span{color:var(--accent)}
+.header-right{display:flex;gap:10px;align-items:center}
+.pill{background:var(--panel);border:1px solid var(--border);
+color:var(--text);border-radius:20px;padding:9px 15px}
+main{max-width:1250px;margin:auto;padding:28px 24px 100px}
+h1{font-size:30px;margin:10px 0 8px}
+.subtitle{color:var(--muted);margin:0 0 25px}
+.search{width:100%;background:var(--panel);border:1px solid var(--border);
+padding:15px 17px;border-radius:12px;color:white;outline:none;margin-bottom:22px}
+.categories{display:flex;gap:9px;overflow-x:auto;padding-bottom:22px}
+.category{white-space:nowrap;background:var(--panel);border:1px solid var(--border);
+color:#ccc;padding:9px 15px;border-radius:25px}
+.category.active{background:#302747;border-color:#66528f;color:#e5d9ff}
+.section-title{font-size:19px;margin:8px 0 17px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}
+.card{background:var(--card);border:1px solid var(--border);
+border-radius:15px;overflow:hidden;cursor:pointer;transition:.2s}
+.card:hover{transform:translateY(-3px);border-color:#615078}
+.portrait{height:205px;position:relative;background:#29252e}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block}
+.badge{position:absolute;top:11px;left:11px;background:#111c;
+padding:6px 9px;border-radius:7px;font-size:11px}
+.card-info{padding:14px}
+.card-name{font-weight:700;font-size:16px;margin-bottom:6px}
+.card-desc{font-size:13px;color:var(--muted);line-height:1.45;height:37px;
+overflow:hidden}
+.card-bottom{display:flex;justify-content:space-between;align-items:center;
+margin-top:14px;font-size:12px;color:var(--muted)}
+.chat-button{border:0;background:#302747;color:#e7ddff;
+padding:7px 12px;border-radius:8px}
+#chatView{display:none;max-width:850px;margin:auto;padding:20px}
+.back{background:var(--panel);border:1px solid var(--border);
+color:white;padding:10px 14px;border-radius:9px;margin-bottom:20px}
+.chat-person{display:flex;gap:14px;align-items:center;padding:12px 0 20px;
+border-bottom:1px solid var(--border)}
+.chat-person img{width:58px;height:58px;border-radius:50%;object-fit:cover}
+.chat-person p{margin:5px 0;color:var(--muted);font-size:13px}
+.messages{min-height:55vh;padding:22px 0}
+.message{max-width:80%;padding:13px 15px;border-radius:15px;
+margin:12px 0;line-height:1.5;font-size:14px;white-space:pre-wrap}
+.bot{background:var(--card);border:1px solid var(--border)}
+.user{background:#49376c;margin-left:auto}
+.input-row{display:flex;gap:9px;position:sticky;bottom:12px;
+background:var(--bg);padding:10px 0}
+.input-row input{flex:1;min-width:0;background:var(--panel);
+border:1px solid var(--border);border-radius:12px;padding:15px;
+color:white;outline:none}
+.send{background:var(--accent);color:#17121e;border:0;
+border-radius:12px;padding:0 20px;font-weight:bold}
+.empty{color:var(--muted);text-align:center;padding:50px 10px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){
+ header{padding:0 15px}
+ main{padding:22px 14px 80px}
+ h1{font-size:26px}
+ .grid{gap:11px}
+ .portrait{height:175px}
+ .card-info{padding:11px}
+ .card-desc{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">mira<span>.</span></div>
+  <div class="header-right">
+    <button class="pill" onclick="showDiscover()">Discover</button>
+    <button class="pill" onclick="alert('Character creation will be connected in the next stage.')">＋ Create</button>
+  </div>
+</header>
+
+<main id="discoverView">
+  <h1>Discover characters</h1>
+  <p class="subtitle">Find someone interesting to talk to.</p>
+
+  <input class="search" id="search" placeholder="Search characters..." oninput="renderCharacters()">
+
+  <div class="categories" id="categories">
+    <button class="category active" onclick="setCategory('All',this)">For you</button>
+    <button class="category" onclick="setCategory('Romance',this)">Romance</button>
+    <button class="category" onclick="setCategory('Fantasy',this)">Fantasy</button>
+    <button class="category" onclick="setCategory('Drama',this)">Drama</button>
+    <button class="category" onclick="setCategory('Mystery',this)">Mystery</button>
+    <button class="category" onclick="setCategory('Friends',this)">Friends</button>
+  </div>
+
+  <h2 class="section-title">Popular characters</h2>
+  <div class="grid" id="characterGrid"></div>
+</main>
+
+<section id="chatView">
+  <button class="back" onclick="showDiscover()">← Discover</button>
+  <div class="chat-person">
+    <img id="chatAvatar" src="" alt="">
+    <div>
+      <strong id="chatName"></strong>
+      <p id="chatDescription"></p>
+    </div>
+  </div>
+  <div class="messages" id="messages"></div>
+  <div class="input-row">
+    <input id="messageInput" placeholder="Write a message..."
+    onkeydown="if(event.key==='Enter')sendMessage()">
+    <button class="send" onclick="sendMessage()">Send</button>
+  </div>
+</section>
+
+<script>
+const characters = [
+{
+ id:"alex",
+ name:"Alex Morgan",
+ category:"Romance",
+ tag:"Cold & distant",
+ description:"A reserved university senior who rarely lets anyone get close.",
+ personality:"Reserved, observant, intelligent, sarcastic and secretly caring. He does not express affection easily.",
+ scenario:"You and Alex attend the same university. After an unexpected encounter, you find yourselves spending more time together.",
+ greeting:"*Alex looks up from his book as you approach.* 'You need something?'",
+ image:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=700"
+},
+{
+ id:"noah",
+ name:"Noah Bennett",
+ category:"Friends",
+ tag:"Childhood friend",
+ description:"Your childhood friend. Playful, familiar and hiding something.",
+ personality:"Funny, teasing, loyal, protective and emotionally guarded when it matters.",
+ scenario:"You and Noah grew up together, but things have become complicated as you've gotten older.",
+ greeting:"*Noah leans against the doorway, grinning.* 'Look who finally decided to show up.'",
+ image:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=700"
+},
+{
+ id:"damien",
+ name:"Damien Cross",
+ category:"Mystery",
+ tag:"The villain",
+ description:"A brilliant and dangerous man who always seems one step ahead.",
+ personality:"Calculating, intimidating, articulate, patient and difficult to read.",
+ scenario:"You accidentally discover information that Damien has spent years keeping secret.",
+ greeting:"*Damien slowly closes the folder in front of him.* 'I was wondering when you'd find out.'",
+ image:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=700"
+},
+{
+ id:"eli",
+ name:"Eli Carter",
+ category:"Romance",
+ tag:"Protective stranger",
+ description:"A quiet stranger who notices more than he lets on.",
+ personality:"Gentle, attentive, protective, thoughtful and slightly mysterious.",
+ scenario:"You meet Eli during a difficult evening. Somehow, a stranger becomes someone you can rely on.",
+ greeting:"*He notices your expression and hesitates.* 'Hey. Are you alright?'",
+ image:"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=700"
+},
+{
+ id:"lucien",
+ name:"Lucien Vale",
+ category:"Fantasy",
+ tag:"Vampire prince",
+ description:"An ancient vampire prince with a beautiful smile and a dangerous secret.",
+ personality:"Elegant, witty, proud, intelligent and unpredictable. He rarely reveals his true feelings.",
+ scenario:"You enter a forbidden part of the royal castle and encounter its mysterious prince.",
+ greeting:"*Lucien turns towards you, his eyes catching the candlelight.* 'You seem rather lost.'",
+ image:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=700"
+},
+{
+ id:"adrian",
+ name:"Adrian Hayes",
+ category:"Drama",
+ tag:"The quiet one",
+ description:"A thoughtful, soft-spoken man who struggles to express what he feels.",
+ personality:"Patient, observant, sensitive, sincere and affectionate through small gestures.",
+ scenario:"Your families arrange a marriage between you and Adrian. You are both strangers trying to understand each other.",
+ greeting:"*Adrian places a cup of tea beside you, then quietly takes the seat across from you.*",
+ image:"https://images.unsplash.com/photo-1504593811423-6dd665756598?w=700"
+},
+{
+ id:"ryan",
+ name:"Ryan Blake",
+ category:"Friends",
+ tag:"The troublemaker",
+ description:"A confident classmate who somehow turns every ordinary day into chaos.",
+ personality:"Outgoing, mischievous, witty, competitive and surprisingly loyal.",
+ scenario:"Ryan is your classmate, and a harmless argument between you has become a daily tradition.",
+ greeting:"*Ryan spins a pen between his fingers.* 'Let me guess. You're here to argue with me again?'",
+ image:"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=700"
+},
+{
+ id:"kael",
+ name:"Kael",
+ category:"Fantasy",
+ tag:"The fallen prince",
+ description:"A banished prince trying to reclaim a kingdom that betrayed him.",
+ personality:"Proud, strategic, stubborn, honourable and haunted by his past.",
+ scenario:"You find Kael injured near the border of a kingdom that wants him dead.",
+ greeting:"*He reaches for his sword before recognising that you're not one of the soldiers.* 'Who sent you?'",
+ image:"https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=700"
+}
+];
+
+let selectedCategory="All";
+let activeCharacter=null;
+let conversations=JSON.parse(localStorage.getItem("miraChats")||"{}");
+
+function setCategory(category,button){
+ selectedCategory=category;
+ document.querySelectorAll(".category").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ renderCharacters();
+}
+
+function renderCharacters(){
+ const query=document.getElementById("search").value.toLowerCase();
+ const filtered=characters.filter(c=>
+ (selectedCategory==="All"||c.category===selectedCategory)&&
+ (c.name.toLowerCase().includes(query)||
+ c.description.toLowerCase().includes(query)||
+ c.tag.toLowerCase().includes(query))
+ );
+ document.getElementById("characterGrid").innerHTML=filtered.length?
+ filtered.map(c=>`
+ <article class="card" onclick="openChat('${c.id}')">
+  <div class="portrait">
+   <img src="${c.image}" alt="${c.name}" loading="lazy">
+   <span class="badge">${c.tag}</span>
+  </div>
+  <div class="card-info">
+   <div class="card-name">${c.name}</div>
+   <div class="card-desc">${c.description}</div>
+   <div class="card-bottom">
+    <span>${c.category}</span>
+    <button class="chat-button">Chat →</button>
+   </div>
+  </div>
+ </article>`).join(""):'<div class="empty">No characters found.</div>';
+}
+
+function showDiscover(){
+ document.getElementById("discoverView").style.display="block";
+ document.getElementById("chatView").style.display="none";
+}
+
+function openChat(id){
+ activeCharacter=characters.find(c=>c.id===id);
+ if(!conversations[id]){
+  conversations[id]=[{role:"assistant",content:activeCharacter.greeting}];
+  saveChats();
+ }
+ document.getElementById("discoverView").style.display="none";
+ document.getElementById("chatView").style.display="block";
+ document.getElementById("chatAvatar").src=activeCharacter.image;
+ document.getElementById("chatName").textContent=activeCharacter.name;
+ document.getElementById("chatDescription").textContent=activeCharacter.description;
+ renderMessages();
+}
+
+function saveChats(){
+ localStorage.setItem("miraChats",JSON.stringify(conversations));
+}
+
+function renderMessages(){
+ document.getElementById("messages").innerHTML=conversations[activeCharacter.id]
+ .map(m=>`<div class="message ${m.role==="user"?"user":"bot"}">${escapeHTML(m.content)}</div>`).join("");
+ document.getElementById("messages").scrollTop=document.getElementById("messages").scrollHeight;
+}
+
+function escapeHTML(text){
+ return String(text).replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+async function sendMessage(){
+ const input=document.getElementById("messageInput");
+ const content=input.value.trim();
+ if(!content||!activeCharacter)return;
+ input.value="";
+ conversations[activeCharacter.id].push({role:"user",content});
+ saveChats();
+ renderMessages();
+
+ const messages=document.getElementById("messages");
+ const typing=document.createElement("div");
+ typing.className="message bot";
+ typing.textContent="Typing...";
+ messages.appendChild(typing);
+
+ try{
+  const response=await fetch("/.netlify/functions/chat",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({
+    character:activeCharacter,
+    messages:conversations[activeCharacter.id].slice(-30)
+   })
+  });
+  const data=await response.json();
+  if(!response.ok)throw new Error(data.error||"The character couldn't reply.");
+  conversations[activeCharacter.id].push({role:"assistant",content:data.reply});
+  saveChats();
+ }catch(error){
+  conversations[activeCharacter.id].push({
+   role:"assistant",
+   content:"I'm having trouble responding right now. Please try again."
+  });
+  console.error(error);
+ }
+ renderMessages();
+}
+
+renderCharacters();
+</script>
+</body>
+</html>
