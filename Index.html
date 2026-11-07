@@ -2,1189 +2,1190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101014">
-<title>Mira AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mira AI — Your AI World</title>
 
 <style>
 :root {
-  --bg:#101014;
-  --panel:#19191f;
-  --panel2:#22222b;
-  --border:#30303a;
-  --text:#f4f1f8;
-  --muted:#a19daa;
-  --accent:#a78bfa;
+    --bg: #100e14;
+    --panel: #19161f;
+    --card: #211d29;
+    --pink: #ff4f91;
+    --pink-light: #ff82ae;
+    --text: #ffffff;
+    --muted: #a49baa;
+    --border: #302a38;
 }
 
-* { box-sizing:border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", sans-serif;
+    min-height: 100vh;
 }
 
-button,input,textarea { font:inherit; }
-button { cursor:pointer; color:inherit; }
-
-.app {
-  max-width:900px;
-  min-height:100vh;
-  margin:auto;
-  padding-bottom:85px;
+button, input, textarea, select {
+    font: inherit;
 }
 
-.top {
-  height:62px;
-  padding:0 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid var(--border);
-  position:sticky;
-  top:0;
-  background:#101014ed;
-  z-index:5;
+button {
+    cursor: pointer;
+    border: none;
 }
 
-.brand {
-  font-size:22px;
-  font-weight:800;
+/* HEADER */
+
+header {
+    height: 70px;
+    padding: 0 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: rgba(16,14,20,.97);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.brand span { color:var(--accent); }
+.logo {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+}
 
-.top-note {
-  font-size:12px;
-  color:var(--muted);
+.logo span {
+    color: var(--pink);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.login-btn {
+    background: transparent;
+    color: white;
+    padding: 10px 18px;
+}
+
+.signup-btn {
+    background: var(--pink);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 22px;
+    font-weight: 700;
+}
+
+/* MAIN LAYOUT */
+
+.container {
+    max-width: 1150px;
+    margin: auto;
+    padding: 35px 22px 100px;
 }
 
 .page {
-  display:none;
-  padding:23px 17px;
+    display: none;
 }
 
-.page.active { display:block; }
-
-.eyebrow {
-  color:var(--accent);
-  font-size:11px;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-  font-weight:700;
+.page.active {
+    display: block;
 }
 
-.heading {
-  font-size:27px;
-  margin:6px 0;
-  letter-spacing:-.7px;
+/* HERO */
+
+.hero {
+    padding: 35px 0 28px;
 }
 
-.sub {
-  color:var(--muted);
-  font-size:14px;
-  margin-bottom:23px;
+.hero h1 {
+    font-size: clamp(30px, 5vw, 45px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
 }
 
-.section-title {
-  font-weight:700;
-  margin:25px 0 13px;
+.hero h1 span {
+    color: var(--pink);
 }
 
-.grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:13px;
+.hero p {
+    color: var(--muted);
+    margin-top: 12px;
+    font-size: 15px;
 }
 
-.char-card {
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:15px;
-  overflow:hidden;
-  cursor:pointer;
+/* SEARCH */
+
+.search-box {
+    margin: 25px 0;
+    display: flex;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 0 17px;
 }
 
-.portrait {
-  height:130px;
-  background:linear-gradient(145deg,#30283d,#191922);
-  display:grid;
-  place-items:center;
-  font-size:48px;
+.search-box input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 17px 12px;
+    color: white;
+    font-size: 15px;
 }
 
-.card-body { padding:12px; }
+/* CATEGORY BUTTONS */
 
-.card-name { font-weight:700; }
-
-.card-desc {
-  color:var(--muted);
-  font-size:12px;
-  margin-top:5px;
-  min-height:35px;
+.categories {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 8px 0 25px;
 }
 
-.tag {
-  display:inline-block;
-  margin-top:9px;
-  padding:4px 9px;
-  border-radius:20px;
-  background:#a78bfa18;
-  color:#c8b9ff;
-  font-size:10px;
+.category {
+    flex-shrink: 0;
+    padding: 10px 19px;
+    border-radius: 25px;
+    background: var(--panel);
+    color: var(--muted);
+    border: 1px solid var(--border);
 }
 
-.empty {
-  padding:25px;
-  border:1px dashed var(--border);
-  border-radius:14px;
-  text-align:center;
-  color:var(--muted);
+.category.active,
+.category:hover {
+    background: var(--pink);
+    color: white;
+    border-color: var(--pink);
 }
 
-.list {
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+/* SECTION */
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 28px 0 18px;
 }
 
-.recent-row {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:13px;
-  cursor:pointer;
+.section-heading h2 {
+    font-size: 21px;
 }
 
-.mini-avatar {
-  width:45px;
-  height:45px;
-  border-radius:12px;
-  background:#30283d;
-  display:grid;
-  place-items:center;
-  font-size:23px;
+.section-heading button {
+    background: transparent;
+    color: var(--pink);
 }
 
-.recent-info { flex:1; min-width:0; }
+/* CHARACTER GRID */
 
-.recent-last {
-  font-size:12px;
-  color:var(--muted);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
 }
 
-.form {
-  display:grid;
-  gap:13px;
-  max-width:600px;
+.character-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 20px;
+    cursor: pointer;
+    transition: .2s;
+    min-width: 0;
 }
 
-.field label {
-  display:block;
-  font-size:13px;
-  margin-bottom:6px;
+.character-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--pink);
 }
 
-.field input,
-.field textarea {
-  width:100%;
-  padding:12px;
-  color:var(--text);
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:11px;
-  outline:none;
+.character-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
-.field textarea {
-  min-height:85px;
-  resize:vertical;
+.character-tag {
+    color: var(--pink-light);
+    background: #402033;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
 }
 
-.field input:focus,
-.field textarea:focus {
-  border-color:var(--accent);
+.character-card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
 }
 
-.primary {
-  background:var(--accent);
-  color:#17121f;
-  border:0;
-  padding:13px;
-  border-radius:11px;
-  font-weight:750;
+.character-card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    height: 42px;
+    overflow: hidden;
 }
 
-.secondary {
-  background:var(--panel2);
-  border:1px solid var(--border);
-  padding:10px 13px;
-  border-radius:10px;
+.character-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 12px;
 }
 
-.profile-box {
-  padding:17px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:14px;
-  margin-bottom:12px;
+/* CREATE BUTTON */
+
+.create-banner {
+    background: linear-gradient(110deg, #59233e, #292033);
+    border: 1px solid #70314f;
+    border-radius: 18px;
+    padding: 25px;
+    margin: 35px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
 }
 
-.muted { color:var(--muted); }
+.create-banner h2 {
+    margin-bottom: 8px;
+}
+
+.create-banner p {
+    color: #d5b8c8;
+    font-size: 13px;
+}
+
+.primary-btn {
+    background: var(--pink);
+    color: white;
+    padding: 13px 22px;
+    border-radius: 25px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* CREATE PAGE */
+
+.form-container {
+    max-width: 650px;
+    margin: 35px auto;
+}
+
+.form-container h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.form-container > p {
+    color: var(--muted);
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 9px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 14px;
+    border-radius: 11px;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--pink);
+}
+
+.form-group textarea {
+    min-height: 110px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.form-group small {
+    color: var(--muted);
+    display: block;
+    margin-top: 7px;
+}
+
+/* CHAT PAGE */
+
+.chat-page {
+    max-width: 850px;
+    margin: auto;
+    height: calc(100vh - 90px);
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.back-btn {
+    background: transparent;
+    color: white;
+    font-size: 23px;
+}
+
+.chat-header h3 {
+    font-size: 17px;
+}
+
+.chat-header small {
+    color: var(--pink-light);
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 22px 12px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 13px 16px;
+    border-radius: 17px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    font-size: 14px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.message.bot {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+}
+
+.message.user {
+    background: var(--pink);
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
+
+.typing {
+    color: var(--muted);
+    font-size: 13px;
+    padding: 10px;
+    display: none;
+}
+
+.chat-input-area {
+    padding: 15px;
+    border-top: 1px solid var(--border);
+}
+
+.chat-input-box {
+    display: flex;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 25px;
+    padding: 5px 7px 5px 17px;
+}
+
+.chat-input-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    min-width: 0;
+    padding: 12px 0;
+}
+
+.send-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--pink);
+    color: white;
+    font-size: 18px;
+}
 
 /* BOTTOM NAVIGATION */
 
-.bottom {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  z-index:10;
-  display:flex;
-  justify-content:center;
-  gap:5px;
-  padding:9px 8px calc(9px + env(safe-area-inset-bottom));
-  background:#17171df5;
-  border-top:1px solid var(--border);
+.bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #19161f;
+    border-top: 1px solid var(--border);
+    padding: 12px 5px;
+    justify-content: space-around;
+    z-index: 100;
 }
 
-.navbtn {
-  flex:1;
-  max-width:110px;
-  border:0;
-  background:transparent;
-  color:var(--muted);
-  padding:7px;
-  border-radius:11px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:3px;
-  font-size:10px;
+.nav-item {
+    background: transparent;
+    color: var(--muted);
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
 
-.navbtn .ico { font-size:20px; }
-
-.navbtn.active {
-  color:var(--accent);
-  background:#a78bfa16;
+.nav-item span {
+    font-size: 20px;
 }
 
-/* CHAT */
-
-.chat-screen {
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:20;
-  background:var(--bg);
-  flex-direction:column;
-  max-width:900px;
-  margin:auto;
+.nav-item.active {
+    color: var(--pink);
 }
 
-.chat-screen.open { display:flex; }
+/* EMPTY STATE */
 
-.chat-head {
-  height:63px;
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  gap:11px;
-  padding:0 12px;
-  border-bottom:1px solid var(--border);
-  background:#15151b;
+.empty {
+    text-align: center;
+    padding: 45px 15px;
+    color: var(--muted);
+    grid-column: 1 / -1;
 }
 
-.back {
-  background:transparent;
-  border:0;
-  font-size:27px;
+/* MOBILE */
+
+@media(max-width: 700px) {
+
+    header {
+        padding: 0 18px;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    .header-right .login-btn {
+        display: none;
+    }
+
+    .container {
+        padding: 20px 15px 95px;
+    }
+
+    .character-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .character-card {
+        padding: 14px;
+    }
+
+    .character-card h3 {
+        font-size: 15px;
+    }
+
+    .character-card p {
+        font-size: 12px;
+    }
+
+    .create-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .bottom-nav {
+        display: flex;
+    }
+
+    .chat-page {
+        height: calc(100dvh - 70px);
+    }
+
+    .message {
+        max-width: 88%;
+    }
 }
 
-.chat-avatar {
-  width:39px;
-  height:39px;
-  border-radius:12px;
-  background:#30283d;
-  display:grid;
-  place-items:center;
-  font-size:22px;
-}
-
-.chat-person { flex:1; }
-
-.chat-person small {
-  display:block;
-  color:var(--muted);
-}
-
-.chat-scroll {
-  flex:1;
-  overflow-y:auto;
-  padding:17px 13px;
-  display:flex;
-  flex-direction:column;
-  gap:13px;
-}
-
-.bubble-row { display:flex; }
-
-.bubble-row.user { justify-content:flex-end; }
-
-.bubble {
-  max-width:82%;
-  padding:12px 14px;
-  border-radius:16px;
-  background:var(--panel2);
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-}
-
-.user .bubble {
-  background:#3a2d57;
-  border:1px solid #66518b;
-}
-
-.chat-compose {
-  display:flex;
-  align-items:flex-end;
-  gap:8px;
-  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-  border-top:1px solid var(--border);
-  background:#15151b;
-}
-
-.chat-compose textarea {
-  flex:1;
-  min-height:44px;
-  max-height:120px;
-  resize:none;
-  padding:12px;
-  background:var(--panel);
-  color:var(--text);
-  border:1px solid var(--border);
-  border-radius:13px;
-  outline:none;
-}
-
-.send {
-  height:44px;
-  width:44px;
-  border:0;
-  border-radius:12px;
-  background:var(--accent);
-  color:#17121f;
-  font-size:21px;
-  font-weight:800;
-}
-
-.send:disabled { opacity:.5; }
-
-.typing {
-  color:var(--muted);
-  font-size:13px;
-}
-
-.toast {
-  display:none;
-  position:fixed;
-  z-index:40;
-  bottom:95px;
-  left:50%;
-  transform:translateX(-50%);
-  padding:11px 15px;
-  background:#292631;
-  border:1px solid var(--border);
-  border-radius:11px;
-  font-size:13px;
-}
-
-.toast.show { display:block; }
-
-@media(min-width:650px) {
-  .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
-  .portrait { height:155px; }
+@media(max-width: 350px) {
+    .character-grid {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<header>
+    <div class="logo">mira<span>.</span></div>
 
-<header class="top">
-  <div class="brand">mira<span>.</span></div>
-  <div class="top-note">A world of characters</div>
+    <div class="header-right">
+        <button class="login-btn" onclick="showPage('discover')">
+            Explore
+        </button>
+
+        <button class="signup-btn" onclick="showPage('create')">
+            Create +
+        </button>
+    </div>
 </header>
 
-<main>
 
-<!-- HOME -->
+<main class="container">
 
-<section class="page active" id="homePage">
+<!-- DISCOVER PAGE -->
 
-  <div class="eyebrow">Discover</div>
-  <h1 class="heading">Find your next story.</h1>
-  <p class="sub">Meet characters and see where the conversation takes you.</p>
+<section id="discover" class="page active">
 
-  <div class="section-title">Featured characters</div>
-  <div class="grid" id="characterGrid"></div>
+    <div class="hero">
+        <h1>Your world.<br>
+        Your characters. <span>Your stories.</span></h1>
+
+        <p>Discover characters, start conversations and create your own world.</p>
+    </div>
+
+    <div class="search-box">
+        <span>⌕</span>
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search characters..."
+            oninput="renderCharacters()"
+        >
+    </div>
+
+    <div class="categories">
+        <button class="category active"
+            onclick="setCategory('All',this)">For You</button>
+
+        <button class="category"
+            onclick="setCategory('Popular',this)">Popular</button>
+
+        <button class="category"
+            onclick="setCategory('Romance',this)">Romance</button>
+
+        <button class="category"
+            onclick="setCategory('Fantasy',this)">Fantasy</button>
+
+        <button class="category"
+            onclick="setCategory('Drama',this)">Drama</button>
+
+        <button class="category"
+            onclick="setCategory('Mystery',this)">Mystery</button>
+    </div>
+
+    <div class="section-heading">
+        <h2>Discover characters</h2>
+    </div>
+
+    <div class="character-grid" id="characterGrid"></div>
+
+    <div class="create-banner">
+
+        <div>
+            <h2>Create your own character</h2>
+            <p>Give them a personality, a story and a world of their own.</p>
+        </div>
+
+        <button class="primary-btn" onclick="showPage('create')">
+            Create character +
+        </button>
+
+    </div>
+
+    <div class="section-heading">
+        <h2>Your creations</h2>
+    </div>
+
+    <div class="character-grid" id="myCharacters"></div>
 
 </section>
 
-<!-- RECENT -->
 
-<section class="page" id="recentPage">
+<!-- CREATE CHARACTER PAGE -->
 
-  <div class="eyebrow">Your conversations</div>
-  <h1 class="heading">Recently chatted</h1>
-  <p class="sub">Pick up where you left off.</p>
+<section id="create" class="page">
 
-  <div class="list" id="recentList"></div>
+    <div class="form-container">
+
+        <h1>Create a character</h1>
+
+        <p>Build someone users will love talking to.</p>
+
+        <form id="characterForm">
+
+            <div class="form-group">
+                <label>Character name</label>
+                <input
+                    type="text"
+                    id="charName"
+                    placeholder="Give your character a name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Short description</label>
+                <input
+                    type="text"
+                    id="charDescription"
+                    placeholder="A mysterious stranger..."
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Personality</label>
+                <textarea
+                    id="charPersonality"
+                    placeholder="Describe their personality, behaviour, background and how they speak..."
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>First message</label>
+                <textarea
+                    id="charGreeting"
+                    placeholder="The first thing your character says..."
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+
+                <select id="charCategory">
+                    <option>Romance</option>
+                    <option>Fantasy</option>
+                    <option>Drama</option>
+                    <option>Mystery</option>
+                    <option>Friendship</option>
+                    <option>Adventure</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Visibility</label>
+
+                <select id="charVisibility">
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
+                </select>
+
+                <small>
+                    Public characters can be discovered by other users.
+                    Private characters are only accessible to their creator.
+                </small>
+            </div>
+
+            <button class="primary-btn" type="submit">
+                Create character
+            </button>
+
+            <button type="button"
+                onclick="showPage('discover')"
+                style="background:transparent;color:white;padding:14px;">
+                Cancel
+            </button>
+
+        </form>
+
+    </div>
 
 </section>
 
-<!-- CREATE -->
 
-<section class="page" id="createPage">
+<!-- CHAT PAGE -->
 
-  <div class="eyebrow">Character studio</div>
-  <h1 class="heading">Create a character</h1>
-  <p class="sub">Build a character with their own personality and story.</p>
+<section id="chat" class="page chat-page">
 
-  <form class="form" id="createForm">
+    <div class="chat-header">
 
-    <div class="field">
-      <label>Character name *</label>
-      <input id="cName" required maxlength="45" placeholder="Character name">
+        <button class="back-btn" onclick="showPage('discover')">
+            ←
+        </button>
+
+        <div>
+            <h3 id="chatCharacterName">Character</h3>
+            <small>● Online</small>
+        </div>
+
     </div>
 
-    <div class="field">
-      <label>Avatar emoji</label>
-      <input id="cEmoji" maxlength="4" value="✦">
+    <div class="chat-messages" id="chatMessages"></div>
+
+    <div class="typing" id="typing">
+        Typing...
     </div>
 
-    <div class="field">
-      <label>Description</label>
-      <textarea id="cDescription" placeholder="Who are they?"></textarea>
+    <div class="chat-input-area">
+
+        <div class="chat-input-box">
+
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="Message..."
+                onkeydown="if(event.key==='Enter') sendMessage()"
+            >
+
+            <button class="send-btn" onclick="sendMessage()">
+                ↑
+            </button>
+
+        </div>
+
     </div>
-
-    <div class="field">
-      <label>Personality</label>
-      <textarea id="cPersonality" placeholder="Traits, habits and behaviour..."></textarea>
-    </div>
-
-    <div class="field">
-      <label>Background</label>
-      <textarea id="cBackground" placeholder="Their history..."></textarea>
-    </div>
-
-    <div class="field">
-      <label>Scenario</label>
-      <textarea id="cScenario" placeholder="Where does the story take place?"></textarea>
-    </div>
-
-    <div class="field">
-      <label>Opening greeting</label>
-      <textarea id="cGreeting" placeholder="Their first message..."></textarea>
-    </div>
-
-    <button class="primary" type="submit">Create character</button>
-
-  </form>
-
-</section>
-
-<!-- PROFILE -->
-
-<section class="page" id="profilePage">
-
-  <div class="eyebrow">Your space</div>
-  <h1 class="heading">Profile</h1>
-  <p class="sub">Your Mira AI activity.</p>
-
-  <div class="profile-box">
-    <strong>Mira AI</strong>
-    <p class="muted">Your characters and conversations are saved in this browser.</p>
-  </div>
-
-  <div class="profile-box">
-    <strong>Your characters</strong>
-    <p class="muted" id="myCharacterCount">0 created</p>
-  </div>
-
-  <div class="profile-box">
-    <strong>Conversations</strong>
-    <p class="muted" id="chatCount">0 saved</p>
-  </div>
-
-  <div class="profile-box">
-    <strong>Data storage</strong>
-    <p class="muted">
-      This version uses local browser storage. Account syncing and
-      Supabase long-term memory are not connected yet.
-    </p>
-    <button class="secondary" id="clearChats" type="button">
-      Clear conversations
-    </button>
-  </div>
 
 </section>
 
 </main>
-</div>
 
-<!-- NAVIGATION -->
 
-<nav class="bottom">
+<!-- MOBILE NAVIGATION -->
 
-  <button class="navbtn active" data-page="homePage">
-    <span class="ico">⌂</span>Home
-  </button>
+<nav class="bottom-nav">
 
-  <button class="navbtn" data-page="recentPage">
-    <span class="ico">◷</span>Recent
-  </button>
+    <button class="nav-item active"
+        onclick="showPage('discover',this)">
+        <span>⌂</span>
+        Home
+    </button>
 
-  <button class="navbtn" data-page="createPage">
-    <span class="ico">＋</span>Create
-  </button>
+    <button class="nav-item"
+        onclick="showPage('discover',this)">
+        <span>⌕</span>
+        Discover
+    </button>
 
-  <button class="navbtn" data-page="profilePage">
-    <span class="ico">◯</span>Profile
-  </button>
+    <button class="nav-item"
+        onclick="showPage('create',this)">
+        <span>＋</span>
+        Create
+    </button>
 
 </nav>
 
-<!-- CHAT SCREEN -->
-
-<div class="chat-screen" id="chatScreen">
-
-  <header class="chat-head">
-
-    <button class="back" id="backBtn">‹</button>
-
-    <div class="chat-avatar" id="chatAvatar">✦</div>
-
-    <div class="chat-person">
-      <strong id="chatName">Character</strong>
-      <small>Conversation</small>
-    </div>
-
-    <button class="secondary" id="newChatBtn" type="button">
-      New chat
-    </button>
-
-  </header>
-
-  <div class="chat-scroll" id="chatMessages"></div>
-
-  <form class="chat-compose" id="messageForm">
-
-    <textarea
-      id="messageInput"
-      rows="1"
-      placeholder="Message..."
-    ></textarea>
-
-    <button class="send" id="sendBtn" type="submit">↑</button>
-
-  </form>
-
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-"use strict";
 
-/* STORAGE */
+/* SAMPLE CHARACTERS */
 
-const STORE_KEY = "mira_ai_v2";
+const sampleCharacters = [
 
-function loadState() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
+    {
+        id: "sample1",
+        name: "Adrian",
+        description: "A quiet man with a complicated past.",
+        personality: "You are Adrian. You are reserved, observant and emotionally guarded. You express yourself through thoughtful actions and meaningful conversations.",
+        greeting: "I wasn't expecting you to come back.",
+        category: "Romance",
+        visibility: "public",
+        popular: true
+    },
 
-    return {
-      characters: Array.isArray(saved.characters) ? saved.characters : [],
-      conversations: Array.isArray(saved.conversations) ? saved.conversations : []
-    };
-  } catch {
-    return { characters: [], conversations: [] };
-  }
-}
+    {
+        id: "sample2",
+        name: "The Stranger",
+        description: "You meet someone mysterious after midnight.",
+        personality: "You are mysterious, intelligent and difficult to understand. You speak carefully and rarely reveal everything.",
+        greeting: "You're out rather late, aren't you?",
+        category: "Mystery",
+        visibility: "public",
+        popular: true
+    },
 
-let state = loadState();
+    {
+        id: "sample3",
+        name: "Elias",
+        description: "A prince hiding something from his kingdom.",
+        personality: "You are Elias, a prince who dislikes royal expectations. You are intelligent, sarcastic and secretly kind.",
+        greeting: "Tell me, do you always question royalty?",
+        category: "Fantasy",
+        visibility: "public",
+        popular: false
+    },
 
-function saveState() {
-  localStorage.setItem(STORE_KEY, JSON.stringify(state));
-}
+    {
+        id: "sample4",
+        name: "Noah",
+        description: "Your childhood friend returns after years away.",
+        personality: "You are Noah. You are playful, affectionate and nostalgic. You remember your shared childhood.",
+        greeting: "Look who's finally decided to show up.",
+        category: "Drama",
+        visibility: "public",
+        popular: false
+    },
 
-/* BUILT-IN CHARACTERS */
+    {
+        id: "sample5",
+        name: "Lucien",
+        description: "An elegant stranger who knows more than he says.",
+        personality: "You are Lucien, charming, intelligent and mysterious. You enjoy witty conversations.",
+        greeting: "Interesting. I have a feeling we'll get along.",
+        category: "Mystery",
+        visibility: "public",
+        popular: true
+    },
 
-const builtIns = [
-
-  {
-    id:"noah",
-    name:"Noah",
-    emoji:"🌙",
-    description:"Your childhood friend. Familiar, teasing and hard to read.",
-    personality:"Warm, witty, observant, teasing and emotionally perceptive. Speak naturally, never formally. You have a shared history with the user.",
-    background:"Noah and the user have known each other for years. They share memories and familiarity.",
-    scenario:"You and the user are reconnecting after some time apart. The story must progress naturally.",
-    greeting:"*Noah looks up as you arrive, a familiar smile appearing.* “There you are. I was starting to think you'd forgotten about me.”",
-    category:"Friends"
-  },
-
-  {
-    id:"elias",
-    name:"Elias",
-    emoji:"🕯️",
-    description:"A quiet stranger with a guarded past.",
-    personality:"Reserved, intelligent, observant and thoughtful. Uses dry humour and opens up gradually.",
-    background:"Elias keeps most people at a distance and notices small details.",
-    scenario:"A late-night meeting in a nearly empty bookshop.",
-    greeting:"*Elias closes the book in his hands and glances towards you.* “Didn't expect anyone else to be here this late.”",
-    category:"Mystery"
-  },
-
-  {
-    id:"adam",
-    name:"Adam",
-    emoji:"☕",
-    description:"Confident, sarcastic and secretly considerate.",
-    personality:"Playful, confident and sarcastic without being cruel. Has his own opinions.",
-    background:"Adam is used to handling things himself and rarely asks for help.",
-    scenario:"You run into Adam at a small café on a rainy afternoon.",
-    greeting:"*Adam looks up from his coffee, raising an eyebrow.* “You always show up when I'm trying to have a quiet day.”",
-    category:"Slice of life"
-  },
-
-  {
-    id:"mira",
-    name:"Mira",
-    emoji:"🌷",
-    description:"A gentle but honest friend.",
-    personality:"Kind, curious, expressive, honest and occasionally stubborn.",
-    background:"Mira values genuine connections and remembers little details.",
-    scenario:"You meet after a long week and finally have time to talk.",
-    greeting:"*Mira shifts over to make room beside her.* “Come sit. Tell me what's been happening.”",
-    category:"Friends"
-  }
+    {
+        id: "sample6",
+        name: "Mika",
+        description: "Your chaotic new best friend.",
+        personality: "You are Mika. You are energetic, funny, supportive and spontaneous.",
+        greeting: "HELLO! I've been waiting for you!",
+        category: "Friendship",
+        visibility: "public",
+        popular: false
+    }
 
 ];
 
-function allCharacters() {
-  return [...builtIns, ...state.characters];
+
+/* LOCAL STORAGE */
+
+let customCharacters = JSON.parse(
+    localStorage.getItem("mira_characters") || "[]"
+);
+
+let currentCategory = "All";
+let currentCharacter = null;
+let chatHistory = [];
+
+
+/* PAGE NAVIGATION */
+
+function showPage(page, button) {
+
+    document.querySelectorAll(".page").forEach(p => {
+        p.classList.remove("active");
+    });
+
+    document.getElementById(page).classList.add("active");
+
+    document.querySelectorAll(".nav-item").forEach(n => {
+        n.classList.remove("active");
+    });
+
+    if(button) button.classList.add("active");
+
+    window.scrollTo(0,0);
 }
 
-function getCharacter(id) {
-  return allCharacters().find(c => c.id === id);
+
+/* GET ALL CHARACTERS */
+
+function getCharacters() {
+    return [...sampleCharacters, ...customCharacters];
 }
 
-function getConversation(id) {
-  return state.conversations.find(c => c.id === id);
+
+/* CATEGORY */
+
+function setCategory(category, button) {
+
+    currentCategory = category;
+
+    document.querySelectorAll(".category").forEach(c => {
+        c.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    renderCharacters();
 }
 
-/* UTILITIES */
 
-function escapeHTML(value = "") {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  })[char]);
+/* CHARACTER CARD */
+
+function createCharacterCard(character) {
+
+    return `
+        <div class="character-card"
+            onclick="openChat('${character.id}')">
+
+            <div class="character-top">
+                <span class="character-tag">
+                    ${escapeHTML(character.category)}
+                </span>
+
+                <span style="color:#ff82ae">✦</span>
+            </div>
+
+            <h3>${escapeHTML(character.name)}</h3>
+
+            <p>${escapeHTML(character.description)}</p>
+
+            <div class="character-footer">
+                <span>✦ AI Character</span>
+                <span>Chat →</span>
+            </div>
+
+        </div>
+    `;
 }
 
-function toast(message) {
-  const el = document.getElementById("toast");
-  el.textContent = message;
-  el.classList.add("show");
 
-  setTimeout(() => el.classList.remove("show"), 2500);
-}
-
-/* NAVIGATION */
-
-function showPage(pageId) {
-
-  document.querySelectorAll(".page").forEach(page => {
-    page.classList.toggle("active", page.id === pageId);
-  });
-
-  document.querySelectorAll(".navbtn").forEach(button => {
-    button.classList.toggle("active", button.dataset.page === pageId);
-  });
-
-  document.getElementById("chatScreen").classList.remove("open");
-
-  if (pageId === "recentPage") renderRecent();
-  if (pageId === "profilePage") renderProfile();
-}
-
-document.querySelectorAll(".navbtn").forEach(button => {
-  button.addEventListener("click", () => showPage(button.dataset.page));
-});
-
-/* CHARACTER DISCOVERY */
+/* RENDER CHARACTERS */
 
 function renderCharacters() {
 
-  const grid = document.getElementById("characterGrid");
+    const search = document.getElementById("searchInput")
+        .value.toLowerCase();
 
-  grid.innerHTML = allCharacters().map(character => `
-    <article class="char-card" data-character="${escapeHTML(character.id)}">
+    let characters = getCharacters();
 
-      <div class="portrait">
-        ${escapeHTML(character.emoji || "✦")}
-      </div>
+    if(currentCategory === "Popular") {
+        characters = characters.filter(c => c.popular);
+    }
+    else if(currentCategory !== "All") {
+        characters = characters.filter(c =>
+            c.category === currentCategory
+        );
+    }
 
-      <div class="card-body">
-        <div class="card-name">${escapeHTML(character.name)}</div>
-
-        <div class="card-desc">
-          ${escapeHTML(character.description || "A new character to discover.")}
-        </div>
-
-        <span class="tag">Start chatting</span>
-      </div>
-
-    </article>
-  `).join("");
-
-  grid.querySelectorAll("[data-character]").forEach(card => {
-    card.addEventListener("click", () => {
-      openCharacter(card.dataset.character);
-    });
-  });
-}
-
-/* OPEN CONVERSATION */
-
-let activeCharacter = null;
-let activeConversationId = null;
-let sending = false;
-
-function openCharacter(characterId, conversationId = null) {
-
-  const character = getCharacter(characterId);
-  if (!character) return;
-
-  activeCharacter = character;
-
-  let conversation = conversationId
-    ? getConversation(conversationId)
-    : [...state.conversations]
-        .filter(c => c.characterId === characterId && !c.archived)
-        .sort((a,b) => b.updatedAt - a.updatedAt)[0];
-
-  if (!conversation) {
-
-    conversation = {
-      id:"conv_" + Date.now() + "_" + Math.random().toString(36).slice(2,7),
-      characterId:characterId,
-      messages:[],
-      createdAt:Date.now(),
-      updatedAt:Date.now()
-    };
-
-    state.conversations.push(conversation);
-    saveState();
-  }
-
-  activeConversationId = conversation.id;
-
-  document.getElementById("chatAvatar").textContent = character.emoji || "✦";
-  document.getElementById("chatName").textContent = character.name;
-
-  document.getElementById("chatScreen").classList.add("open");
-
-  renderMessages();
-}
-
-/* DISPLAY CHAT */
-
-function appendBubble(role, content) {
-
-  const box = document.getElementById("chatMessages");
-
-  const row = document.createElement("div");
-  row.className = "bubble-row " + (role === "user" ? "user" : "assistant");
-
-  const bubble = document.createElement("div");
-  bubble.className = "bubble";
-  bubble.textContent = content;
-
-  row.appendChild(bubble);
-  box.appendChild(row);
-
-  box.scrollTop = box.scrollHeight;
-}
-
-function renderMessages() {
-
-  const box = document.getElementById("chatMessages");
-  const conversation = getConversation(activeConversationId);
-
-  if (!conversation) return;
-
-  box.innerHTML = "";
-
-  if (!conversation.messages.length) {
-    appendBubble(
-      "assistant",
-      activeCharacter.greeting || `*${activeCharacter.name} looks over at you.* “Hey.”`
+    characters = characters.filter(c =>
+        c.name.toLowerCase().includes(search) ||
+        c.description.toLowerCase().includes(search)
     );
-  }
 
-  conversation.messages.forEach(message => {
-    appendBubble(message.role, message.content);
-  });
+    const grid = document.getElementById("characterGrid");
 
-  box.scrollTop = box.scrollHeight;
+    grid.innerHTML = characters.length
+        ? characters.map(createCharacterCard).join("")
+        : `<div class="empty">No characters found.</div>`;
+
+    document.getElementById("myCharacters").innerHTML =
+        customCharacters.length
+        ? customCharacters.map(createCharacterCard).join("")
+        : `<div class="empty">Your created characters will appear here.</div>`;
 }
 
-/* START NEW CHAT */
 
-function newConversation() {
+/* ESCAPE HTML */
 
-  if (!activeCharacter) return;
+function escapeHTML(value) {
 
-  const conversation = {
-    id:"conv_" + Date.now() + "_" + Math.random().toString(36).slice(2,7),
-    characterId:activeCharacter.id,
-    messages:[],
-    createdAt:Date.now(),
-    updatedAt:Date.now()
-  };
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
 
-  state.conversations.push(conversation);
-
-  activeConversationId = conversation.id;
-
-  saveState();
-  renderMessages();
-
-  toast("New conversation started.");
 }
 
-document.getElementById("newChatBtn").addEventListener("click", newConversation);
-
-/* SEND MESSAGE — FULL HISTORY IS SENT EVERY TIME */
-
-async function sendMessage(text) {
-
-  const conversation = getConversation(activeConversationId);
-
-  if (!conversation || !activeCharacter || sending) return;
-
-  sending = true;
-
-  const sendButton = document.getElementById("sendBtn");
-  sendButton.disabled = true;
-
-  // Add the user's message to the existing transcript first.
-  conversation.messages.push({
-    role:"user",
-    content:text
-  });
-
-  conversation.updatedAt = Date.now();
-
-  // Save the conversation immediately.
-  saveState();
-
-  appendBubble("user", text);
-
-  const typing = document.createElement("div");
-  typing.className = "typing";
-  typing.textContent = activeCharacter.name + " is thinking...";
-  typing.id = "typingIndicator";
-
-  document.getElementById("chatMessages").appendChild(typing);
-
-  // IMPORTANT: include every previous user and assistant message.
-  const transcript = conversation.messages.map(message => ({
-    role:message.role,
-    content:message.content
-  }));
-
-  try {
-
-    const response = await fetch("/.netlify/functions/chat", {
-
-      method:"POST",
-
-      headers:{
-        "Content-Type":"application/json"
-      },
-
-      body:JSON.stringify({
-        character:activeCharacter,
-        messages:transcript
-      })
-
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "The AI service could not respond.");
-    }
-
-    const reply = typeof data.reply === "string"
-      ? data.reply.trim()
-      : "";
-
-    if (!reply) {
-      throw new Error("The character returned an empty reply.");
-    }
-
-    // Save the assistant's reply in the same conversation.
-    conversation.messages.push({
-      role:"assistant",
-      content:reply
-    });
-
-    conversation.updatedAt = Date.now();
-
-    saveState();
-
-    typing.remove();
-
-    appendBubble("assistant", reply);
-
-  } catch (error) {
-
-    typing.remove();
-
-    toast(error.message || "Couldn't send your message.");
-
-  } finally {
-
-    sending = false;
-    sendButton.disabled = false;
-
-    document.getElementById("messageInput").focus({
-      preventScroll:true
-    });
-
-  }
-}
-
-/* MESSAGE INPUT */
-
-document.getElementById("messageForm").addEventListener("submit", event => {
-
-  event.preventDefault();
-
-  const input = document.getElementById("messageInput");
-  const text = input.value.trim();
-
-  if (!text || sending) return;
-
-  input.value = "";
-  input.style.height = "44px";
-
-  sendMessage(text);
-
-});
-
-const messageInput = document.getElementById("messageInput");
-
-messageInput.addEventListener("input", () => {
-
-  messageInput.style.height = "44px";
-
-  messageInput.style.height =
-    Math.min(messageInput.scrollHeight, 120) + "px";
-
-});
-
-messageInput.addEventListener("keydown", event => {
-
-  if (event.key === "Enter" && !event.shiftKey) {
-
-    event.preventDefault();
-
-    document.getElementById("messageForm").requestSubmit();
-
-  }
-
-});
-
-/* BACK BUTTON */
-
-document.getElementById("backBtn").addEventListener("click", () => {
-
-  document.getElementById("chatScreen").classList.remove("open");
-
-  renderRecent();
-
-});
-
-/* RECENT CONVERSATIONS */
-
-function renderRecent() {
-
-  const list = document.getElementById("recentList");
-
-  const sorted = [...state.conversations].sort(
-    (a,b) => b.updatedAt - a.updatedAt
-  );
-
-  if (!sorted.length) {
-
-    list.innerHTML = `
-      <div class="empty">
-        No conversations yet.<br>
-        Choose a character on Home to begin.
-      </div>
-    `;
-
-    return;
-  }
-
-  list.innerHTML = sorted.map(conversation => {
-
-    const character = getCharacter(conversation.characterId);
-
-    if (!character) return "";
-
-    const last = conversation.messages[conversation.messages.length - 1];
-
-    return `
-      <div class="recent-row" data-conversation="${escapeHTML(conversation.id)}">
-
-        <div class="mini-avatar">
-          ${escapeHTML(character.emoji || "✦")}
-        </div>
-
-        <div class="recent-info">
-
-          <strong>${escapeHTML(character.name)}</strong>
-
-          <div class="recent-last">
-            ${escapeHTML(last ? last.content : "Start a conversation")}
-          </div>
-
-        </div>
-
-        <span class="muted">›</span>
-
-      </div>
-    `;
-
-  }).join("");
-
-  list.querySelectorAll("[data-conversation]").forEach(row => {
-
-    row.addEventListener("click", () => {
-
-      const conversation = getConversation(row.dataset.conversation);
-
-      if (conversation) {
-        openCharacter(conversation.characterId, conversation.id);
-      }
-
-    });
-
-  });
-
-}
 
 /* CREATE CHARACTER */
 
-document.getElementById("createForm").addEventListener("submit", event => {
+document.getElementById("characterForm")
+.addEventListener("submit", function(e) {
 
-  event.preventDefault();
+    e.preventDefault();
 
-  const name = document.getElementById("cName").value.trim();
+    const character = {
 
-  if (!name) return;
+        id: "custom_" + Date.now(),
 
-  const character = {
+        name: document.getElementById("charName").value.trim(),
 
-    id:"custom_" + Date.now(),
+        description: document.getElementById("charDescription").value.trim(),
 
-    name,
+        personality: document.getElementById("charPersonality").value.trim(),
 
-    emoji:document.getElementById("cEmoji").value.trim() || "✦",
+        greeting: document.getElementById("charGreeting").value.trim(),
 
-    description:document.getElementById("cDescription").value.trim(),
+        category: document.getElementById("charCategory").value,
 
-    personality:document.getElementById("cPersonality").value.trim(),
+        visibility: document.getElementById("charVisibility").value,
 
-    background:document.getElementById("cBackground").value.trim(),
+        popular: false
 
-    scenario:document.getElementById("cScenario").value.trim(),
+    };
 
-    greeting:document.getElementById("cGreeting").value.trim(),
+    customCharacters.push(character);
 
-    category:"Your character"
+    localStorage.setItem(
+        "mira_characters",
+        JSON.stringify(customCharacters)
+    );
 
-  };
+    this.reset();
 
-  state.characters.push(character);
+    renderCharacters();
 
-  saveState();
+    showPage("discover");
 
-  event.target.reset();
-
-  document.getElementById("cEmoji").value = "✦";
-
-  renderCharacters();
-
-  showPage("homePage");
-
-  toast(name + " was created.");
+    alert("Your character has been created!");
 
 });
 
-/* PROFILE */
 
-function renderProfile() {
+/* OPEN CHAT */
 
-  document.getElementById("myCharacterCount").textContent =
-    state.characters.length + " created on this device";
+function openChat(id) {
 
-  document.getElementById("chatCount").textContent =
-    state.conversations.length + " saved on this device";
+    const character = getCharacters().find(c => c.id === id);
+
+    if(!character) return;
+
+    currentCharacter = character;
+
+    chatHistory = [];
+
+    document.getElementById("chatCharacterName").textContent =
+        character.name;
+
+    document.getElementById("chatMessages").innerHTML = "";
+
+    addMessage(character.greeting, "bot");
+
+    showPage("chat");
 
 }
 
-document.getElementById("clearChats").addEventListener("click", () => {
 
-  if (!confirm("Delete all conversations saved on this device?")) return;
+/* ADD MESSAGE */
 
-  state.conversations = [];
+function addMessage(text, sender) {
 
-  saveState();
+    const messages = document.getElementById("chatMessages");
 
-  renderProfile();
-  renderRecent();
+    const message = document.createElement("div");
 
-  toast("Conversations cleared.");
+    message.className = "message " + sender;
 
-});
+    message.textContent = text;
 
-/* INITIAL LOAD */
+    messages.appendChild(message);
+
+    messages.scrollTop = messages.scrollHeight;
+
+}
+
+
+/* SEND MESSAGE TO GROQ BACKEND */
+
+async function sendMessage() {
+
+    const input = document.getElementById("messageInput");
+
+    const text = input.value.trim();
+
+    if(!text || !currentCharacter) return;
+
+    input.value = "";
+
+    addMessage(text, "user");
+
+    chatHistory.push({
+        role: "user",
+        content: text
+    });
+
+    const typing = document.getElementById("typing");
+
+    typing.style.display = "block";
+
+    try {
+
+        const response = await fetch(
+            "/.netlify/functions/chat",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    character: currentCharacter,
+
+                    messages: chatHistory
+
+                })
+
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok) {
+            throw new Error(data.error || "Something went wrong.");
+        }
+
+        const reply =
+            data.reply ||
+            data.message ||
+            data.response;
+
+        if(!reply) {
+            throw new Error("The AI returned an empty response.");
+        }
+
+        chatHistory.push({
+            role: "assistant",
+            content: reply
+        });
+
+        addMessage(reply, "bot");
+
+    }
+
+    catch(error) {
+
+        addMessage(
+            "Sorry, something went wrong. Please try again.",
+            "bot"
+        );
+
+        console.error(error);
+
+    }
+
+    finally {
+
+        typing.style.display = "none";
+
+    }
+
+}
+
+
+/* INITIALIZE */
 
 renderCharacters();
-renderRecent();
-renderProfile();
 
 </script>
 
