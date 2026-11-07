@@ -2,338 +2,1191 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101014">
 <title>Mira AI</title>
+
 <style>
 :root {
-  --bg:#101012;
-  --panel:#18181b;
-  --card:#202024;
-  --border:#2c2c31;
-  --text:#f5f5f5;
-  --muted:#929299;
-  --accent:#a58aff;
+  --bg:#101014;
+  --panel:#19191f;
+  --panel2:#22222b;
+  --border:#30303a;
+  --text:#f4f1f8;
+  --muted:#a19daa;
+  --accent:#a78bfa;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-font-family:Arial,sans-serif}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-header{height:65px;border-bottom:1px solid var(--border);
-display:flex;align-items:center;justify-content:space-between;
-padding:0 25px;position:sticky;top:0;background:#101012;z-index:5}
-.logo{font-size:24px;font-weight:750;letter-spacing:-1px}
-.logo span{color:var(--accent)}
-.header-right{display:flex;gap:10px;align-items:center}
-.pill{background:var(--panel);border:1px solid var(--border);
-color:var(--text);border-radius:20px;padding:9px 15px}
-main{max-width:1250px;margin:auto;padding:28px 24px 100px}
-h1{font-size:30px;margin:10px 0 8px}
-.subtitle{color:var(--muted);margin:0 0 25px}
-.search{width:100%;background:var(--panel);border:1px solid var(--border);
-padding:15px 17px;border-radius:12px;color:white;outline:none;margin-bottom:22px}
-.categories{display:flex;gap:9px;overflow-x:auto;padding-bottom:22px}
-.category{white-space:nowrap;background:var(--panel);border:1px solid var(--border);
-color:#ccc;padding:9px 15px;border-radius:25px}
-.category.active{background:#302747;border-color:#66528f;color:#e5d9ff}
-.section-title{font-size:19px;margin:8px 0 17px}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}
-.card{background:var(--card);border:1px solid var(--border);
-border-radius:15px;overflow:hidden;cursor:pointer;transition:.2s}
-.card:hover{transform:translateY(-3px);border-color:#615078}
-.portrait{height:205px;position:relative;background:#29252e}
-.portrait img{width:100%;height:100%;object-fit:cover;display:block}
-.badge{position:absolute;top:11px;left:11px;background:#111c;
-padding:6px 9px;border-radius:7px;font-size:11px}
-.card-info{padding:14px}
-.card-name{font-weight:700;font-size:16px;margin-bottom:6px}
-.card-desc{font-size:13px;color:var(--muted);line-height:1.45;height:37px;
-overflow:hidden}
-.card-bottom{display:flex;justify-content:space-between;align-items:center;
-margin-top:14px;font-size:12px;color:var(--muted)}
-.chat-button{border:0;background:#302747;color:#e7ddff;
-padding:7px 12px;border-radius:8px}
-#chatView{display:none;max-width:850px;margin:auto;padding:20px}
-.back{background:var(--panel);border:1px solid var(--border);
-color:white;padding:10px 14px;border-radius:9px;margin-bottom:20px}
-.chat-person{display:flex;gap:14px;align-items:center;padding:12px 0 20px;
-border-bottom:1px solid var(--border)}
-.chat-person img{width:58px;height:58px;border-radius:50%;object-fit:cover}
-.chat-person p{margin:5px 0;color:var(--muted);font-size:13px}
-.messages{min-height:55vh;padding:22px 0}
-.message{max-width:80%;padding:13px 15px;border-radius:15px;
-margin:12px 0;line-height:1.5;font-size:14px;white-space:pre-wrap}
-.bot{background:var(--card);border:1px solid var(--border)}
-.user{background:#49376c;margin-left:auto}
-.input-row{display:flex;gap:9px;position:sticky;bottom:12px;
-background:var(--bg);padding:10px 0}
-.input-row input{flex:1;min-width:0;background:var(--panel);
-border:1px solid var(--border);border-radius:12px;padding:15px;
-color:white;outline:none}
-.send{background:var(--accent);color:#17121e;border:0;
-border-radius:12px;padding:0 20px;font-weight:bold}
-.empty{color:var(--muted);text-align:center;padding:50px 10px}
-@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:480px){
- header{padding:0 15px}
- main{padding:22px 14px 80px}
- h1{font-size:26px}
- .grid{gap:11px}
- .portrait{height:175px}
- .card-info{padding:11px}
- .card-desc{font-size:12px}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+button,input,textarea { font:inherit; }
+button { cursor:pointer; color:inherit; }
+
+.app {
+  max-width:900px;
+  min-height:100vh;
+  margin:auto;
+  padding-bottom:85px;
+}
+
+.top {
+  height:62px;
+  padding:0 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  background:#101014ed;
+  z-index:5;
+}
+
+.brand {
+  font-size:22px;
+  font-weight:800;
+}
+
+.brand span { color:var(--accent); }
+
+.top-note {
+  font-size:12px;
+  color:var(--muted);
+}
+
+.page {
+  display:none;
+  padding:23px 17px;
+}
+
+.page.active { display:block; }
+
+.eyebrow {
+  color:var(--accent);
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  font-weight:700;
+}
+
+.heading {
+  font-size:27px;
+  margin:6px 0;
+  letter-spacing:-.7px;
+}
+
+.sub {
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:23px;
+}
+
+.section-title {
+  font-weight:700;
+  margin:25px 0 13px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+
+.char-card {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:15px;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.portrait {
+  height:130px;
+  background:linear-gradient(145deg,#30283d,#191922);
+  display:grid;
+  place-items:center;
+  font-size:48px;
+}
+
+.card-body { padding:12px; }
+
+.card-name { font-weight:700; }
+
+.card-desc {
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+  min-height:35px;
+}
+
+.tag {
+  display:inline-block;
+  margin-top:9px;
+  padding:4px 9px;
+  border-radius:20px;
+  background:#a78bfa18;
+  color:#c8b9ff;
+  font-size:10px;
+}
+
+.empty {
+  padding:25px;
+  border:1px dashed var(--border);
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.list {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.recent-row {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:13px;
+  cursor:pointer;
+}
+
+.mini-avatar {
+  width:45px;
+  height:45px;
+  border-radius:12px;
+  background:#30283d;
+  display:grid;
+  place-items:center;
+  font-size:23px;
+}
+
+.recent-info { flex:1; min-width:0; }
+
+.recent-last {
+  font-size:12px;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.form {
+  display:grid;
+  gap:13px;
+  max-width:600px;
+}
+
+.field label {
+  display:block;
+  font-size:13px;
+  margin-bottom:6px;
+}
+
+.field input,
+.field textarea {
+  width:100%;
+  padding:12px;
+  color:var(--text);
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:11px;
+  outline:none;
+}
+
+.field textarea {
+  min-height:85px;
+  resize:vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color:var(--accent);
+}
+
+.primary {
+  background:var(--accent);
+  color:#17121f;
+  border:0;
+  padding:13px;
+  border-radius:11px;
+  font-weight:750;
+}
+
+.secondary {
+  background:var(--panel2);
+  border:1px solid var(--border);
+  padding:10px 13px;
+  border-radius:10px;
+}
+
+.profile-box {
+  padding:17px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:12px;
+}
+
+.muted { color:var(--muted); }
+
+/* BOTTOM NAVIGATION */
+
+.bottom {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:10;
+  display:flex;
+  justify-content:center;
+  gap:5px;
+  padding:9px 8px calc(9px + env(safe-area-inset-bottom));
+  background:#17171df5;
+  border-top:1px solid var(--border);
+}
+
+.navbtn {
+  flex:1;
+  max-width:110px;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:7px;
+  border-radius:11px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  font-size:10px;
+}
+
+.navbtn .ico { font-size:20px; }
+
+.navbtn.active {
+  color:var(--accent);
+  background:#a78bfa16;
+}
+
+/* CHAT */
+
+.chat-screen {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:20;
+  background:var(--bg);
+  flex-direction:column;
+  max-width:900px;
+  margin:auto;
+}
+
+.chat-screen.open { display:flex; }
+
+.chat-head {
+  height:63px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:0 12px;
+  border-bottom:1px solid var(--border);
+  background:#15151b;
+}
+
+.back {
+  background:transparent;
+  border:0;
+  font-size:27px;
+}
+
+.chat-avatar {
+  width:39px;
+  height:39px;
+  border-radius:12px;
+  background:#30283d;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+}
+
+.chat-person { flex:1; }
+
+.chat-person small {
+  display:block;
+  color:var(--muted);
+}
+
+.chat-scroll {
+  flex:1;
+  overflow-y:auto;
+  padding:17px 13px;
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+}
+
+.bubble-row { display:flex; }
+
+.bubble-row.user { justify-content:flex-end; }
+
+.bubble {
+  max-width:82%;
+  padding:12px 14px;
+  border-radius:16px;
+  background:var(--panel2);
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.user .bubble {
+  background:#3a2d57;
+  border:1px solid #66518b;
+}
+
+.chat-compose {
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--border);
+  background:#15151b;
+}
+
+.chat-compose textarea {
+  flex:1;
+  min-height:44px;
+  max-height:120px;
+  resize:none;
+  padding:12px;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:13px;
+  outline:none;
+}
+
+.send {
+  height:44px;
+  width:44px;
+  border:0;
+  border-radius:12px;
+  background:var(--accent);
+  color:#17121f;
+  font-size:21px;
+  font-weight:800;
+}
+
+.send:disabled { opacity:.5; }
+
+.typing {
+  color:var(--muted);
+  font-size:13px;
+}
+
+.toast {
+  display:none;
+  position:fixed;
+  z-index:40;
+  bottom:95px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:11px 15px;
+  background:#292631;
+  border:1px solid var(--border);
+  border-radius:11px;
+  font-size:13px;
+}
+
+.toast.show { display:block; }
+
+@media(min-width:650px) {
+  .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .portrait { height:155px; }
 }
 </style>
 </head>
+
 <body>
 
-<header>
-  <div class="logo">mira<span>.</span></div>
-  <div class="header-right">
-    <button class="pill" onclick="showDiscover()">Discover</button>
-    <button class="pill" onclick="alert('Character creation will be connected in the next stage.')">＋ Create</button>
-  </div>
+<div class="app">
+
+<header class="top">
+  <div class="brand">mira<span>.</span></div>
+  <div class="top-note">A world of characters</div>
 </header>
 
-<main id="discoverView">
-  <h1>Discover characters</h1>
-  <p class="subtitle">Find someone interesting to talk to.</p>
+<main>
 
-  <input class="search" id="search" placeholder="Search characters..." oninput="renderCharacters()">
+<!-- HOME -->
 
-  <div class="categories" id="categories">
-    <button class="category active" onclick="setCategory('All',this)">For you</button>
-    <button class="category" onclick="setCategory('Romance',this)">Romance</button>
-    <button class="category" onclick="setCategory('Fantasy',this)">Fantasy</button>
-    <button class="category" onclick="setCategory('Drama',this)">Drama</button>
-    <button class="category" onclick="setCategory('Mystery',this)">Mystery</button>
-    <button class="category" onclick="setCategory('Friends',this)">Friends</button>
-  </div>
+<section class="page active" id="homePage">
 
-  <h2 class="section-title">Popular characters</h2>
+  <div class="eyebrow">Discover</div>
+  <h1 class="heading">Find your next story.</h1>
+  <p class="sub">Meet characters and see where the conversation takes you.</p>
+
+  <div class="section-title">Featured characters</div>
   <div class="grid" id="characterGrid"></div>
-</main>
 
-<section id="chatView">
-  <button class="back" onclick="showDiscover()">← Discover</button>
-  <div class="chat-person">
-    <img id="chatAvatar" src="" alt="">
-    <div>
-      <strong id="chatName"></strong>
-      <p id="chatDescription"></p>
-    </div>
-  </div>
-  <div class="messages" id="messages"></div>
-  <div class="input-row">
-    <input id="messageInput" placeholder="Write a message..."
-    onkeydown="if(event.key==='Enter')sendMessage()">
-    <button class="send" onclick="sendMessage()">Send</button>
-  </div>
 </section>
 
+<!-- RECENT -->
+
+<section class="page" id="recentPage">
+
+  <div class="eyebrow">Your conversations</div>
+  <h1 class="heading">Recently chatted</h1>
+  <p class="sub">Pick up where you left off.</p>
+
+  <div class="list" id="recentList"></div>
+
+</section>
+
+<!-- CREATE -->
+
+<section class="page" id="createPage">
+
+  <div class="eyebrow">Character studio</div>
+  <h1 class="heading">Create a character</h1>
+  <p class="sub">Build a character with their own personality and story.</p>
+
+  <form class="form" id="createForm">
+
+    <div class="field">
+      <label>Character name *</label>
+      <input id="cName" required maxlength="45" placeholder="Character name">
+    </div>
+
+    <div class="field">
+      <label>Avatar emoji</label>
+      <input id="cEmoji" maxlength="4" value="✦">
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <textarea id="cDescription" placeholder="Who are they?"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Personality</label>
+      <textarea id="cPersonality" placeholder="Traits, habits and behaviour..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Background</label>
+      <textarea id="cBackground" placeholder="Their history..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Scenario</label>
+      <textarea id="cScenario" placeholder="Where does the story take place?"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Opening greeting</label>
+      <textarea id="cGreeting" placeholder="Their first message..."></textarea>
+    </div>
+
+    <button class="primary" type="submit">Create character</button>
+
+  </form>
+
+</section>
+
+<!-- PROFILE -->
+
+<section class="page" id="profilePage">
+
+  <div class="eyebrow">Your space</div>
+  <h1 class="heading">Profile</h1>
+  <p class="sub">Your Mira AI activity.</p>
+
+  <div class="profile-box">
+    <strong>Mira AI</strong>
+    <p class="muted">Your characters and conversations are saved in this browser.</p>
+  </div>
+
+  <div class="profile-box">
+    <strong>Your characters</strong>
+    <p class="muted" id="myCharacterCount">0 created</p>
+  </div>
+
+  <div class="profile-box">
+    <strong>Conversations</strong>
+    <p class="muted" id="chatCount">0 saved</p>
+  </div>
+
+  <div class="profile-box">
+    <strong>Data storage</strong>
+    <p class="muted">
+      This version uses local browser storage. Account syncing and
+      Supabase long-term memory are not connected yet.
+    </p>
+    <button class="secondary" id="clearChats" type="button">
+      Clear conversations
+    </button>
+  </div>
+
+</section>
+
+</main>
+</div>
+
+<!-- NAVIGATION -->
+
+<nav class="bottom">
+
+  <button class="navbtn active" data-page="homePage">
+    <span class="ico">⌂</span>Home
+  </button>
+
+  <button class="navbtn" data-page="recentPage">
+    <span class="ico">◷</span>Recent
+  </button>
+
+  <button class="navbtn" data-page="createPage">
+    <span class="ico">＋</span>Create
+  </button>
+
+  <button class="navbtn" data-page="profilePage">
+    <span class="ico">◯</span>Profile
+  </button>
+
+</nav>
+
+<!-- CHAT SCREEN -->
+
+<div class="chat-screen" id="chatScreen">
+
+  <header class="chat-head">
+
+    <button class="back" id="backBtn">‹</button>
+
+    <div class="chat-avatar" id="chatAvatar">✦</div>
+
+    <div class="chat-person">
+      <strong id="chatName">Character</strong>
+      <small>Conversation</small>
+    </div>
+
+    <button class="secondary" id="newChatBtn" type="button">
+      New chat
+    </button>
+
+  </header>
+
+  <div class="chat-scroll" id="chatMessages"></div>
+
+  <form class="chat-compose" id="messageForm">
+
+    <textarea
+      id="messageInput"
+      rows="1"
+      placeholder="Message..."
+    ></textarea>
+
+    <button class="send" id="sendBtn" type="submit">↑</button>
+
+  </form>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-const characters = [
-{
- id:"alex",
- name:"Alex Morgan",
- category:"Romance",
- tag:"Cold & distant",
- description:"A reserved university senior who rarely lets anyone get close.",
- personality:"Reserved, observant, intelligent, sarcastic and secretly caring. He does not express affection easily.",
- scenario:"You and Alex attend the same university. After an unexpected encounter, you find yourselves spending more time together.",
- greeting:"*Alex looks up from his book as you approach.* 'You need something?'",
- image:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=700"
-},
-{
- id:"noah",
- name:"Noah Bennett",
- category:"Friends",
- tag:"Childhood friend",
- description:"Your childhood friend. Playful, familiar and hiding something.",
- personality:"Funny, teasing, loyal, protective and emotionally guarded when it matters.",
- scenario:"You and Noah grew up together, but things have become complicated as you've gotten older.",
- greeting:"*Noah leans against the doorway, grinning.* 'Look who finally decided to show up.'",
- image:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=700"
-},
-{
- id:"damien",
- name:"Damien Cross",
- category:"Mystery",
- tag:"The villain",
- description:"A brilliant and dangerous man who always seems one step ahead.",
- personality:"Calculating, intimidating, articulate, patient and difficult to read.",
- scenario:"You accidentally discover information that Damien has spent years keeping secret.",
- greeting:"*Damien slowly closes the folder in front of him.* 'I was wondering when you'd find out.'",
- image:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=700"
-},
-{
- id:"eli",
- name:"Eli Carter",
- category:"Romance",
- tag:"Protective stranger",
- description:"A quiet stranger who notices more than he lets on.",
- personality:"Gentle, attentive, protective, thoughtful and slightly mysterious.",
- scenario:"You meet Eli during a difficult evening. Somehow, a stranger becomes someone you can rely on.",
- greeting:"*He notices your expression and hesitates.* 'Hey. Are you alright?'",
- image:"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=700"
-},
-{
- id:"lucien",
- name:"Lucien Vale",
- category:"Fantasy",
- tag:"Vampire prince",
- description:"An ancient vampire prince with a beautiful smile and a dangerous secret.",
- personality:"Elegant, witty, proud, intelligent and unpredictable. He rarely reveals his true feelings.",
- scenario:"You enter a forbidden part of the royal castle and encounter its mysterious prince.",
- greeting:"*Lucien turns towards you, his eyes catching the candlelight.* 'You seem rather lost.'",
- image:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=700"
-},
-{
- id:"adrian",
- name:"Adrian Hayes",
- category:"Drama",
- tag:"The quiet one",
- description:"A thoughtful, soft-spoken man who struggles to express what he feels.",
- personality:"Patient, observant, sensitive, sincere and affectionate through small gestures.",
- scenario:"Your families arrange a marriage between you and Adrian. You are both strangers trying to understand each other.",
- greeting:"*Adrian places a cup of tea beside you, then quietly takes the seat across from you.*",
- image:"https://images.unsplash.com/photo-1504593811423-6dd665756598?w=700"
-},
-{
- id:"ryan",
- name:"Ryan Blake",
- category:"Friends",
- tag:"The troublemaker",
- description:"A confident classmate who somehow turns every ordinary day into chaos.",
- personality:"Outgoing, mischievous, witty, competitive and surprisingly loyal.",
- scenario:"Ryan is your classmate, and a harmless argument between you has become a daily tradition.",
- greeting:"*Ryan spins a pen between his fingers.* 'Let me guess. You're here to argue with me again?'",
- image:"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=700"
-},
-{
- id:"kael",
- name:"Kael",
- category:"Fantasy",
- tag:"The fallen prince",
- description:"A banished prince trying to reclaim a kingdom that betrayed him.",
- personality:"Proud, strategic, stubborn, honourable and haunted by his past.",
- scenario:"You find Kael injured near the border of a kingdom that wants him dead.",
- greeting:"*He reaches for his sword before recognising that you're not one of the soldiers.* 'Who sent you?'",
- image:"https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=700"
+"use strict";
+
+/* STORAGE */
+
+const STORE_KEY = "mira_ai_v2";
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
+
+    return {
+      characters: Array.isArray(saved.characters) ? saved.characters : [],
+      conversations: Array.isArray(saved.conversations) ? saved.conversations : []
+    };
+  } catch {
+    return { characters: [], conversations: [] };
+  }
 }
+
+let state = loadState();
+
+function saveState() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+}
+
+/* BUILT-IN CHARACTERS */
+
+const builtIns = [
+
+  {
+    id:"noah",
+    name:"Noah",
+    emoji:"🌙",
+    description:"Your childhood friend. Familiar, teasing and hard to read.",
+    personality:"Warm, witty, observant, teasing and emotionally perceptive. Speak naturally, never formally. You have a shared history with the user.",
+    background:"Noah and the user have known each other for years. They share memories and familiarity.",
+    scenario:"You and the user are reconnecting after some time apart. The story must progress naturally.",
+    greeting:"*Noah looks up as you arrive, a familiar smile appearing.* “There you are. I was starting to think you'd forgotten about me.”",
+    category:"Friends"
+  },
+
+  {
+    id:"elias",
+    name:"Elias",
+    emoji:"🕯️",
+    description:"A quiet stranger with a guarded past.",
+    personality:"Reserved, intelligent, observant and thoughtful. Uses dry humour and opens up gradually.",
+    background:"Elias keeps most people at a distance and notices small details.",
+    scenario:"A late-night meeting in a nearly empty bookshop.",
+    greeting:"*Elias closes the book in his hands and glances towards you.* “Didn't expect anyone else to be here this late.”",
+    category:"Mystery"
+  },
+
+  {
+    id:"adam",
+    name:"Adam",
+    emoji:"☕",
+    description:"Confident, sarcastic and secretly considerate.",
+    personality:"Playful, confident and sarcastic without being cruel. Has his own opinions.",
+    background:"Adam is used to handling things himself and rarely asks for help.",
+    scenario:"You run into Adam at a small café on a rainy afternoon.",
+    greeting:"*Adam looks up from his coffee, raising an eyebrow.* “You always show up when I'm trying to have a quiet day.”",
+    category:"Slice of life"
+  },
+
+  {
+    id:"mira",
+    name:"Mira",
+    emoji:"🌷",
+    description:"A gentle but honest friend.",
+    personality:"Kind, curious, expressive, honest and occasionally stubborn.",
+    background:"Mira values genuine connections and remembers little details.",
+    scenario:"You meet after a long week and finally have time to talk.",
+    greeting:"*Mira shifts over to make room beside her.* “Come sit. Tell me what's been happening.”",
+    category:"Friends"
+  }
+
 ];
 
-let selectedCategory="All";
-let activeCharacter=null;
-let conversations=JSON.parse(localStorage.getItem("miraChats")||"{}");
-
-function setCategory(category,button){
- selectedCategory=category;
- document.querySelectorAll(".category").forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
- renderCharacters();
+function allCharacters() {
+  return [...builtIns, ...state.characters];
 }
 
-function renderCharacters(){
- const query=document.getElementById("search").value.toLowerCase();
- const filtered=characters.filter(c=>
- (selectedCategory==="All"||c.category===selectedCategory)&&
- (c.name.toLowerCase().includes(query)||
- c.description.toLowerCase().includes(query)||
- c.tag.toLowerCase().includes(query))
- );
- document.getElementById("characterGrid").innerHTML=filtered.length?
- filtered.map(c=>`
- <article class="card" onclick="openChat('${c.id}')">
-  <div class="portrait">
-   <img src="${c.image}" alt="${c.name}" loading="lazy">
-   <span class="badge">${c.tag}</span>
-  </div>
-  <div class="card-info">
-   <div class="card-name">${c.name}</div>
-   <div class="card-desc">${c.description}</div>
-   <div class="card-bottom">
-    <span>${c.category}</span>
-    <button class="chat-button">Chat →</button>
-   </div>
-  </div>
- </article>`).join(""):'<div class="empty">No characters found.</div>';
+function getCharacter(id) {
+  return allCharacters().find(c => c.id === id);
 }
 
-function showDiscover(){
- document.getElementById("discoverView").style.display="block";
- document.getElementById("chatView").style.display="none";
+function getConversation(id) {
+  return state.conversations.find(c => c.id === id);
 }
 
-function openChat(id){
- activeCharacter=characters.find(c=>c.id===id);
- if(!conversations[id]){
-  conversations[id]=[{role:"assistant",content:activeCharacter.greeting}];
-  saveChats();
- }
- document.getElementById("discoverView").style.display="none";
- document.getElementById("chatView").style.display="block";
- document.getElementById("chatAvatar").src=activeCharacter.image;
- document.getElementById("chatName").textContent=activeCharacter.name;
- document.getElementById("chatDescription").textContent=activeCharacter.description;
- renderMessages();
+/* UTILITIES */
+
+function escapeHTML(value = "") {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
 }
 
-function saveChats(){
- localStorage.setItem("miraChats",JSON.stringify(conversations));
+function toast(message) {
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.classList.add("show");
+
+  setTimeout(() => el.classList.remove("show"), 2500);
 }
 
-function renderMessages(){
- document.getElementById("messages").innerHTML=conversations[activeCharacter.id]
- .map(m=>`<div class="message ${m.role==="user"?"user":"bot"}">${escapeHTML(m.content)}</div>`).join("");
- document.getElementById("messages").scrollTop=document.getElementById("messages").scrollHeight;
-}
+/* NAVIGATION */
 
-function escapeHTML(text){
- return String(text).replace(/[&<>"']/g,c=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- }[c]));
-}
+function showPage(pageId) {
 
-async function sendMessage(){
- const input=document.getElementById("messageInput");
- const content=input.value.trim();
- if(!content||!activeCharacter)return;
- input.value="";
- conversations[activeCharacter.id].push({role:"user",content});
- saveChats();
- renderMessages();
-
- const messages=document.getElementById("messages");
- const typing=document.createElement("div");
- typing.className="message bot";
- typing.textContent="Typing...";
- messages.appendChild(typing);
-
- try{
-  const response=await fetch("/.netlify/functions/chat",{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({
-    character:activeCharacter,
-    messages:conversations[activeCharacter.id].slice(-30)
-   })
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("active", page.id === pageId);
   });
-  const data=await response.json();
-  if(!response.ok)throw new Error(data.error||"The character couldn't reply.");
-  conversations[activeCharacter.id].push({role:"assistant",content:data.reply});
-  saveChats();
- }catch(error){
-  conversations[activeCharacter.id].push({
-   role:"assistant",
-   content:"I'm having trouble responding right now. Please try again."
+
+  document.querySelectorAll(".navbtn").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === pageId);
   });
-  console.error(error);
- }
- renderMessages();
+
+  document.getElementById("chatScreen").classList.remove("open");
+
+  if (pageId === "recentPage") renderRecent();
+  if (pageId === "profilePage") renderProfile();
 }
+
+document.querySelectorAll(".navbtn").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+/* CHARACTER DISCOVERY */
+
+function renderCharacters() {
+
+  const grid = document.getElementById("characterGrid");
+
+  grid.innerHTML = allCharacters().map(character => `
+    <article class="char-card" data-character="${escapeHTML(character.id)}">
+
+      <div class="portrait">
+        ${escapeHTML(character.emoji || "✦")}
+      </div>
+
+      <div class="card-body">
+        <div class="card-name">${escapeHTML(character.name)}</div>
+
+        <div class="card-desc">
+          ${escapeHTML(character.description || "A new character to discover.")}
+        </div>
+
+        <span class="tag">Start chatting</span>
+      </div>
+
+    </article>
+  `).join("");
+
+  grid.querySelectorAll("[data-character]").forEach(card => {
+    card.addEventListener("click", () => {
+      openCharacter(card.dataset.character);
+    });
+  });
+}
+
+/* OPEN CONVERSATION */
+
+let activeCharacter = null;
+let activeConversationId = null;
+let sending = false;
+
+function openCharacter(characterId, conversationId = null) {
+
+  const character = getCharacter(characterId);
+  if (!character) return;
+
+  activeCharacter = character;
+
+  let conversation = conversationId
+    ? getConversation(conversationId)
+    : [...state.conversations]
+        .filter(c => c.characterId === characterId && !c.archived)
+        .sort((a,b) => b.updatedAt - a.updatedAt)[0];
+
+  if (!conversation) {
+
+    conversation = {
+      id:"conv_" + Date.now() + "_" + Math.random().toString(36).slice(2,7),
+      characterId:characterId,
+      messages:[],
+      createdAt:Date.now(),
+      updatedAt:Date.now()
+    };
+
+    state.conversations.push(conversation);
+    saveState();
+  }
+
+  activeConversationId = conversation.id;
+
+  document.getElementById("chatAvatar").textContent = character.emoji || "✦";
+  document.getElementById("chatName").textContent = character.name;
+
+  document.getElementById("chatScreen").classList.add("open");
+
+  renderMessages();
+}
+
+/* DISPLAY CHAT */
+
+function appendBubble(role, content) {
+
+  const box = document.getElementById("chatMessages");
+
+  const row = document.createElement("div");
+  row.className = "bubble-row " + (role === "user" ? "user" : "assistant");
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.textContent = content;
+
+  row.appendChild(bubble);
+  box.appendChild(row);
+
+  box.scrollTop = box.scrollHeight;
+}
+
+function renderMessages() {
+
+  const box = document.getElementById("chatMessages");
+  const conversation = getConversation(activeConversationId);
+
+  if (!conversation) return;
+
+  box.innerHTML = "";
+
+  if (!conversation.messages.length) {
+    appendBubble(
+      "assistant",
+      activeCharacter.greeting || `*${activeCharacter.name} looks over at you.* “Hey.”`
+    );
+  }
+
+  conversation.messages.forEach(message => {
+    appendBubble(message.role, message.content);
+  });
+
+  box.scrollTop = box.scrollHeight;
+}
+
+/* START NEW CHAT */
+
+function newConversation() {
+
+  if (!activeCharacter) return;
+
+  const conversation = {
+    id:"conv_" + Date.now() + "_" + Math.random().toString(36).slice(2,7),
+    characterId:activeCharacter.id,
+    messages:[],
+    createdAt:Date.now(),
+    updatedAt:Date.now()
+  };
+
+  state.conversations.push(conversation);
+
+  activeConversationId = conversation.id;
+
+  saveState();
+  renderMessages();
+
+  toast("New conversation started.");
+}
+
+document.getElementById("newChatBtn").addEventListener("click", newConversation);
+
+/* SEND MESSAGE — FULL HISTORY IS SENT EVERY TIME */
+
+async function sendMessage(text) {
+
+  const conversation = getConversation(activeConversationId);
+
+  if (!conversation || !activeCharacter || sending) return;
+
+  sending = true;
+
+  const sendButton = document.getElementById("sendBtn");
+  sendButton.disabled = true;
+
+  // Add the user's message to the existing transcript first.
+  conversation.messages.push({
+    role:"user",
+    content:text
+  });
+
+  conversation.updatedAt = Date.now();
+
+  // Save the conversation immediately.
+  saveState();
+
+  appendBubble("user", text);
+
+  const typing = document.createElement("div");
+  typing.className = "typing";
+  typing.textContent = activeCharacter.name + " is thinking...";
+  typing.id = "typingIndicator";
+
+  document.getElementById("chatMessages").appendChild(typing);
+
+  // IMPORTANT: include every previous user and assistant message.
+  const transcript = conversation.messages.map(message => ({
+    role:message.role,
+    content:message.content
+  }));
+
+  try {
+
+    const response = await fetch("/.netlify/functions/chat", {
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+        character:activeCharacter,
+        messages:transcript
+      })
+
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "The AI service could not respond.");
+    }
+
+    const reply = typeof data.reply === "string"
+      ? data.reply.trim()
+      : "";
+
+    if (!reply) {
+      throw new Error("The character returned an empty reply.");
+    }
+
+    // Save the assistant's reply in the same conversation.
+    conversation.messages.push({
+      role:"assistant",
+      content:reply
+    });
+
+    conversation.updatedAt = Date.now();
+
+    saveState();
+
+    typing.remove();
+
+    appendBubble("assistant", reply);
+
+  } catch (error) {
+
+    typing.remove();
+
+    toast(error.message || "Couldn't send your message.");
+
+  } finally {
+
+    sending = false;
+    sendButton.disabled = false;
+
+    document.getElementById("messageInput").focus({
+      preventScroll:true
+    });
+
+  }
+}
+
+/* MESSAGE INPUT */
+
+document.getElementById("messageForm").addEventListener("submit", event => {
+
+  event.preventDefault();
+
+  const input = document.getElementById("messageInput");
+  const text = input.value.trim();
+
+  if (!text || sending) return;
+
+  input.value = "";
+  input.style.height = "44px";
+
+  sendMessage(text);
+
+});
+
+const messageInput = document.getElementById("messageInput");
+
+messageInput.addEventListener("input", () => {
+
+  messageInput.style.height = "44px";
+
+  messageInput.style.height =
+    Math.min(messageInput.scrollHeight, 120) + "px";
+
+});
+
+messageInput.addEventListener("keydown", event => {
+
+  if (event.key === "Enter" && !event.shiftKey) {
+
+    event.preventDefault();
+
+    document.getElementById("messageForm").requestSubmit();
+
+  }
+
+});
+
+/* BACK BUTTON */
+
+document.getElementById("backBtn").addEventListener("click", () => {
+
+  document.getElementById("chatScreen").classList.remove("open");
+
+  renderRecent();
+
+});
+
+/* RECENT CONVERSATIONS */
+
+function renderRecent() {
+
+  const list = document.getElementById("recentList");
+
+  const sorted = [...state.conversations].sort(
+    (a,b) => b.updatedAt - a.updatedAt
+  );
+
+  if (!sorted.length) {
+
+    list.innerHTML = `
+      <div class="empty">
+        No conversations yet.<br>
+        Choose a character on Home to begin.
+      </div>
+    `;
+
+    return;
+  }
+
+  list.innerHTML = sorted.map(conversation => {
+
+    const character = getCharacter(conversation.characterId);
+
+    if (!character) return "";
+
+    const last = conversation.messages[conversation.messages.length - 1];
+
+    return `
+      <div class="recent-row" data-conversation="${escapeHTML(conversation.id)}">
+
+        <div class="mini-avatar">
+          ${escapeHTML(character.emoji || "✦")}
+        </div>
+
+        <div class="recent-info">
+
+          <strong>${escapeHTML(character.name)}</strong>
+
+          <div class="recent-last">
+            ${escapeHTML(last ? last.content : "Start a conversation")}
+          </div>
+
+        </div>
+
+        <span class="muted">›</span>
+
+      </div>
+    `;
+
+  }).join("");
+
+  list.querySelectorAll("[data-conversation]").forEach(row => {
+
+    row.addEventListener("click", () => {
+
+      const conversation = getConversation(row.dataset.conversation);
+
+      if (conversation) {
+        openCharacter(conversation.characterId, conversation.id);
+      }
+
+    });
+
+  });
+
+}
+
+/* CREATE CHARACTER */
+
+document.getElementById("createForm").addEventListener("submit", event => {
+
+  event.preventDefault();
+
+  const name = document.getElementById("cName").value.trim();
+
+  if (!name) return;
+
+  const character = {
+
+    id:"custom_" + Date.now(),
+
+    name,
+
+    emoji:document.getElementById("cEmoji").value.trim() || "✦",
+
+    description:document.getElementById("cDescription").value.trim(),
+
+    personality:document.getElementById("cPersonality").value.trim(),
+
+    background:document.getElementById("cBackground").value.trim(),
+
+    scenario:document.getElementById("cScenario").value.trim(),
+
+    greeting:document.getElementById("cGreeting").value.trim(),
+
+    category:"Your character"
+
+  };
+
+  state.characters.push(character);
+
+  saveState();
+
+  event.target.reset();
+
+  document.getElementById("cEmoji").value = "✦";
+
+  renderCharacters();
+
+  showPage("homePage");
+
+  toast(name + " was created.");
+
+});
+
+/* PROFILE */
+
+function renderProfile() {
+
+  document.getElementById("myCharacterCount").textContent =
+    state.characters.length + " created on this device";
+
+  document.getElementById("chatCount").textContent =
+    state.conversations.length + " saved on this device";
+
+}
+
+document.getElementById("clearChats").addEventListener("click", () => {
+
+  if (!confirm("Delete all conversations saved on this device?")) return;
+
+  state.conversations = [];
+
+  saveState();
+
+  renderProfile();
+  renderRecent();
+
+  toast("Conversations cleared.");
+
+});
+
+/* INITIAL LOAD */
 
 renderCharacters();
+renderRecent();
+renderProfile();
+
 </script>
+
 </body>
 </html>
